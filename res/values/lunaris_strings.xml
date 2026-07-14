@@ -3117,4 +3117,6 @@
     <string name="network_speed_layout_single">Single line (units beside number)</string>
     <string name="network_speed_layout_dual">Dual line (units below number)</string>
 
+    <string name="boot_animation_applied">Boot animation applied</string>
+
 </resources>

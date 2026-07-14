@@ -3156,4 +3156,6 @@
     <string name="edge_light_animation_direction_title">Animation direction</string>
     <string name="edge_light_direction_normal">Normal</string>
     <string name="edge_light_direction_reversed">Reversed</string>
+    <string name="boot_animation_applied">Boot animation applied</string>
+
 </resources>

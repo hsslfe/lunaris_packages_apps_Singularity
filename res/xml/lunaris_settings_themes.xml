@@ -297,6 +297,11 @@
             android:summary="@string/settings_scroll_bounce_summary"
             android:fragment="com.android.settings.display.ScrollBounceSettings" />
 
+        <Preference
+            android:key="switch_icon"
+            android:title="@string/switch_icon_title"
+            android:fragment="org.lunaris.settings.fragments.themes.SwitchIconSettings" />
+
         <org.lunaris.settings.preferences.OverlaySwitchPreference
             android:key="com.android.settingslib.smileswitch"
             android:title="@string/smile_switch_title"

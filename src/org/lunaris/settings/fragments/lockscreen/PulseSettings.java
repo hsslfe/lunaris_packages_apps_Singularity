@@ -48,9 +48,11 @@ public class PulseSettings extends SettingsPreferenceFragment implements
     private static final String KEY_PULSE_BASS_HAPTICS = "pulse_bass_haptics";
     private static final String KEY_PULSE_CAPTURE_MODE = "pulse_capture_mode";
     private static final String KEY_PULSE_SHOW_ON_AMBIENT = "pulse_show_on_ambient";
+    private static final String KEY_PULSE_SHOW_WHEN_UNLOCKED = "pulse_show_when_unlocked";
 
     private SecureSettingSwitchPreference mPulseShowOnMediaPlayer;
     private SecureSettingSwitchPreference mPulseShowOnAmbient;
+    private SecureSettingSwitchPreference mPulseShowWhenUnlocked;
     private SecureSettingListPreference mPulseRenderer;
     private SecureSettingListPreference mPulseColor;
     private SecureSettingListPreference mPulseBassHaptics;
@@ -65,6 +67,7 @@ public class PulseSettings extends SettingsPreferenceFragment implements
 
         mPulseShowOnMediaPlayer = findPreference(KEY_PULSE_SHOW_ON_MEDIA_PLAYER);
         mPulseShowOnAmbient = findPreference(KEY_PULSE_SHOW_ON_AMBIENT);
+        mPulseShowWhenUnlocked = findPreference(KEY_PULSE_SHOW_WHEN_UNLOCKED);
         mPulseRenderer = (SecureSettingListPreference) findPreference(KEY_PULSE_RENDERER);
         mPulseColor = (SecureSettingListPreference) findPreference(KEY_PULSE_COLOR);
         mPulseCustomColor = (SecureSettingColorPickerPreference) findPreference(KEY_PULSE_CUSTOM_COLOR);
@@ -95,13 +98,11 @@ public class PulseSettings extends SettingsPreferenceFragment implements
         }
 
         if (mPulseShowOnMediaPlayer != null) mPulseShowOnMediaPlayer.setOnPreferenceChangeListener(this);
-        if (mPulseShowOnAmbient != null) {
-            boolean mediaPlayerEnabled = Settings.Secure.getIntForUser(
-                    getContentResolver(),
-                    Settings.Secure.PULSE_SHOW_ON_MEDIA_PLAYER,
-                    UserHandle.USER_CURRENT, 0) == 1;
-            updateAmbientPreference(!mediaPlayerEnabled);
-        }
+        boolean mediaPlayerEnabled = Settings.Secure.getIntForUser(
+                getContentResolver(),
+                Settings.Secure.PULSE_SHOW_ON_MEDIA_PLAYER,
+                0, UserHandle.USER_CURRENT) == 1;
+        updateFullscreenPreferences(!mediaPlayerEnabled);
     }
 
     @Override
@@ -120,15 +121,25 @@ public class PulseSettings extends SettingsPreferenceFragment implements
             return true;
         } else if (preference == mPulseShowOnMediaPlayer) {
             boolean mediaPlayerState = (Boolean) newValue;
-            updateAmbientPreference(!mediaPlayerState);
+            updateFullscreenPreferences(!mediaPlayerState);
             return true;
         }
         return false;
     }
 
-    private void updateAmbientPreference(boolean state) {
-        mPulseShowOnAmbient.setEnabled(state);
-        mPulseShowOnAmbient.setSummary(state ? R.string.pulse_show_on_ambient_summary : R.string.pulse_show_on_ambient_disabled_player);
+    private void updateFullscreenPreferences(boolean enabled) {
+        if (mPulseShowOnAmbient != null) {
+            mPulseShowOnAmbient.setEnabled(enabled);
+            mPulseShowOnAmbient.setSummary(enabled
+                    ? R.string.pulse_show_on_ambient_summary
+                    : R.string.pulse_show_on_ambient_disabled_player);
+        }
+        if (mPulseShowWhenUnlocked != null) {
+            mPulseShowWhenUnlocked.setEnabled(enabled);
+            mPulseShowWhenUnlocked.setSummary(enabled
+                    ? R.string.pulse_show_when_unlocked_summary
+                    : R.string.pulse_show_when_unlocked_disabled_player);
+        }
     }
 
     private void updatePreferenceVisibility(String rendererValue, String colorValue, String captureModeValue) {

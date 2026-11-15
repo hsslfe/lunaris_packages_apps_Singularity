@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="SingularityCardTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/singularity_text_primary</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:importantForAccessibility">no</item>
+    </style>
+    <style name="SingularityCardSummary">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:textColor">@color/singularity_text_secondary</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:importantForAccessibility">no</item>
+    </style>
+    <style name="SingularityCardIcon">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:padding">11dp</item>
+        <item name="android:background">@drawable/singularity_icon_background</item>
+        <item name="android:importantForAccessibility">no</item>
+    </style>
+    <style name="SingularityCardArrow">
+        <item name="android:layout_width">16dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_marginStart">6dp</item>
+        <item name="android:src">@drawable/ic_singularity_chevron</item>
+        <item name="android:importantForAccessibility">no</item>
+    </style>
+</resources>

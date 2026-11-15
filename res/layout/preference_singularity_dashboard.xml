@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="14dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="28dp"
+    android:background="@color/singularity_background">
+    <ImageButton
+        android:id="@+id/singularity_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:padding="14dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/singularity_circle_background"
+        android:src="@drawable/ic_singularity_back"
+        android:contentDescription="@string/singularity_back" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/lunaris_dashboard_title"
+        android:textColor="@color/singularity_text_primary"
+        android:textSize="28sp"
+        android:accessibilityHeading="true" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="22dp"
+        android:text="@string/singularity_subtitle"
+        android:textColor="@color/singularity_text_secondary"
+        android:textSize="13sp" />
+    <FrameLayout
+        android:id="@+id/singularity_lockscreen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="116dp"
+        android:background="@drawable/singularity_accent_background"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clipToOutline="true"
+        android:focusable="true"
+        android:clickable="true">
+        <org.lunaris.settings.utils.BlurredLockscreenWallpaperView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            android:importantForAccessibility="no" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            android:background="@drawable/singularity_wallpaper_overlay"
+            android:importantForAccessibility="no" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="30dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        style="@style/SingularityCardTitle"
+                        android:text="@string/singularity_lockscreen"
+                        android:textSize="17sp" />
+                    <TextClock
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:format12Hour="hh:mm"
+                        android:format24Hour="HH:mm"
+                        android:maxLines="1"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeMinTextSize="24sp"
+                        android:autoSizeMaxTextSize="42sp"
+                        android:autoSizeStepGranularity="1sp"
+                        android:textColor="@color/singularity_text_primary"
+                        android:textSize="42sp"
+                        android:importantForAccessibility="no" />
+                </LinearLayout>
+                <ImageView
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/singularity_circle_background"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_singularity_lock"
+                    android:importantForAccessibility="no" />
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/singularity_clock_line"
+                android:importantForAccessibility="no" />
+        </LinearLayout>
+    </FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/singularity_card_background"
+        android:clipToOutline="true"
+        android:orientation="vertical">
+        <include
+            android:id="@+id/singularity_monet"
+            layout="@layout/singularity_dashboard_row" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="18dp"
+            android:background="@color/singularity_divider" />
+        <include
+            android:id="@+id/singularity_wallpapers"
+            layout="@layout/singularity_dashboard_row" />
+    </LinearLayout>
+    <include
+        android:id="@+id/singularity_themes"
+        layout="@layout/singularity_dashboard_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+        <include
+            android:id="@+id/singularity_statusbar"
+            layout="@layout/singularity_dashboard_small_row"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="1dp" />
+        <include
+            android:id="@+id/singularity_qs"
+            layout="@layout/singularity_dashboard_small_row"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
+    <include
+        android:id="@+id/singularity_aod"
+        layout="@layout/singularity_dashboard_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+        <include
+            android:id="@+id/singularity_buttons"
+            layout="@layout/singularity_dashboard_tile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+        <Space
+            android:layout_width="9dp"
+            android:layout_height="1dp" />
+        <include
+            android:id="@+id/singularity_power"
+            layout="@layout/singularity_dashboard_tile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+        <Space
+            android:layout_width="9dp"
+            android:layout_height="1dp" />
+        <include
+            android:id="@+id/singularity_notifications"
+            layout="@layout/singularity_dashboard_tile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+        <include
+            android:id="@+id/singularity_navigation"
+            layout="@layout/singularity_dashboard_tile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+        <Space
+            android:layout_width="9dp"
+            android:layout_height="1dp" />
+        <include
+            android:id="@+id/singularity_misc"
+            layout="@layout/singularity_dashboard_tile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+        <Space
+            android:layout_width="9dp"
+            android:layout_height="1dp" />
+        <include
+            android:id="@+id/singularity_team"
+            layout="@layout/singularity_dashboard_tile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
+    <!-- Keep the original sound settings accessible alongside the new shortcuts. -->
+    <include
+        android:id="@+id/singularity_sound"
+        layout="@layout/singularity_dashboard_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp" />
+</LinearLayout>

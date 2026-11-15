@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextClock
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="66dp"
+    android:layout_height="34dp"
+    android:gravity="center"
+    android:background="@drawable/singularity_card_background"
+    android:fontFamily="sans-serif-medium"
+    android:format12Hour="h:mm"
+    android:format24Hour="HH:mm"
+    android:textSize="15sp"
+    android:textColor="@color/singularity_text_primary"
+    android:importantForAccessibility="no" />

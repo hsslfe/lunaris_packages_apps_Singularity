@@ -38,6 +38,7 @@ import com.android.settingslib.search.SearchIndexable;
 
 import org.lunaris.settings.fragments.themes.SmartPixels;
 import org.lunaris.settings.utils.SystemUtils;
+import org.lunaris.settings.utils.SwitchThumbIconManager;
 import org.lunaris.settings.preferences.SecureSettingPrimarySwitchPreference;
 import org.lunaris.settings.preferences.SystemSettingListPreference;
 import org.lunaris.settings.preferences.SystemSettingPrimarySwitchPreference;
@@ -61,6 +62,7 @@ public class Themes extends SettingsPreferenceFragment implements
     private static final String KEY_FORCE_FULL_SCREEN = "display_cutout_force_fullscreen_settings";
     private static final String KEY_VOLUME_DIALOG_TYPE = "volume_dialog_type";
     private static final String KEY_QUICKSWITCH = "quickswitch";
+    private static final String KEY_SWITCH_ICON = "switch_icon";
     private static final String KEY_SHOW_VOLUME_PERCENTAGE = "show_volume_percentage";
     private static final String KEY_AXION_VOLUME_STYLE = "compose_volume_style";
     private static final String KEY_LOCK_GLYMPS = "lock_glymps_enabled";
@@ -127,11 +129,13 @@ public class Themes extends SettingsPreferenceFragment implements
             mUnlockAnimation.setOnPreferenceChangeListener(this);
         }
         updateUnlockRelatedVisibility(unlockAnimation);
+        updateSwitchIconSummary();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        updateSwitchIconSummary();
         for (String key : new String[] {
                 "edge_aurora_enabled", "edge_light_enabled", KEY_LOCK_GLYMPS }) {
             SystemSettingPrimarySwitchPreference preference = findPreference(key);
@@ -149,6 +153,13 @@ public class Themes extends SettingsPreferenceFragment implements
             mUnlockAnimation.setValue(Integer.toString(unlockAnimation));
         }
         updateUnlockRelatedVisibility(unlockAnimation);
+    }
+
+    private void updateSwitchIconSummary() {
+        Preference preference = findPreference(KEY_SWITCH_ICON);
+        if (preference != null && getContext() != null) {
+            preference.setSummary(SwitchThumbIconManager.INSTANCE.getChoiceLabel(getContext()));
+        }
     }
 
     private int getCurrentUnlockAnimation() {

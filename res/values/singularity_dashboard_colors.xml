@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="singularity_background">#F7F9FC</color>
+    <color name="singularity_card_start">#FFFFFF</color>
+    <color name="singularity_card_center">#FAFBFD</color>
+    <color name="singularity_card_end">#F5F7FA</color>
+    <color name="singularity_card_stroke">#D8DFE8</color>
+    <color name="singularity_icon_start">#F0F3F8</color>
+    <color name="singularity_icon_end">#E8EDF4</color>
+    <color name="singularity_icon_stroke">#D4DBE5</color>
+    <color name="singularity_circle_end">#E8EDF4</color>
+    <color name="singularity_line">#CFD7E2</color>
+    <color name="singularity_divider">#DDE3EB</color>
+    <color name="singularity_wallpaper_scrim">#D9FFFFFF</color>
+    <color name="singularity_text_primary">#191C20</color>
+    <color name="singularity_text_secondary">#515D6C</color>
+    <color name="singularity_icon_accent">#326ACB</color>
+</resources>

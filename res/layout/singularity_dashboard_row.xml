@@ -32,5 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
         android:gravity="center_vertical" />
-    <ImageView style="@style/SingularityCardArrow" />
+    <ImageView
+        android:id="@+id/singularity_card_chevron"
+        style="@style/SingularityCardArrow" />
 </LinearLayout>

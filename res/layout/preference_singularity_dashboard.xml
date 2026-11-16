@@ -148,7 +148,7 @@
             android:id="@+id/singularity_statusbar"
             layout="@layout/singularity_dashboard_small_row"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1" />
         <Space
             android:layout_width="10dp"
@@ -157,7 +157,7 @@
             android:id="@+id/singularity_qs"
             layout="@layout/singularity_dashboard_small_row"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1" />
     </LinearLayout>
     <include
@@ -176,7 +176,7 @@
             android:id="@+id/singularity_buttons"
             layout="@layout/singularity_dashboard_tile"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1" />
         <Space
             android:layout_width="9dp"
@@ -185,7 +185,7 @@
             android:id="@+id/singularity_power"
             layout="@layout/singularity_dashboard_tile"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1" />
         <Space
             android:layout_width="9dp"
@@ -194,7 +194,7 @@
             android:id="@+id/singularity_notifications"
             layout="@layout/singularity_dashboard_tile"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1" />
     </LinearLayout>
     <LinearLayout
@@ -207,7 +207,7 @@
             android:id="@+id/singularity_navigation"
             layout="@layout/singularity_dashboard_tile"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1" />
         <Space
             android:layout_width="9dp"
@@ -216,7 +216,7 @@
             android:id="@+id/singularity_misc"
             layout="@layout/singularity_dashboard_tile"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1" />
         <Space
             android:layout_width="9dp"
@@ -225,7 +225,7 @@
             android:id="@+id/singularity_team"
             layout="@layout/singularity_dashboard_tile"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1" />
     </LinearLayout>
     <!-- Keep the original sound settings accessible alongside the new shortcuts. -->

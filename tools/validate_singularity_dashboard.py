@@ -91,7 +91,7 @@ class DashboardSourceChecks(unittest.TestCase):
         rows = [e for e in layout.iter() if e.get(ANDROID + 'orientation') == 'horizontal'
                 and any(c.get(ANDROID + 'layout_weight') == '1' for c in e)]
         shortcut_rows = [e for e in rows if e.get(ANDROID + 'baselineAligned') == 'false']
-        self.assertEqual(3, len(shortcut_rows))
+        self.assertEqual(1, len(shortcut_rows))
         for row in shortcut_rows:
             for card in row:
                 if card.get(ANDROID + 'layout_weight') == '1':
@@ -99,6 +99,17 @@ class DashboardSourceChecks(unittest.TestCase):
                     # horizontal row can be forced to zero height by LinearLayout.
                     self.assertEqual('wrap_content', card.get(ANDROID + 'layout_height'))
                     self.assertGreaterEqual(int(card.get(ANDROID + 'minHeight')[:-2]), 48)
+
+    def test_six_shortcuts_share_one_tile_template(self):
+        page = ET.parse(RES / 'layout/preference_singularity_dashboard.xml').getroot()
+        grid = next(e for e in page if e.get(ANDROID + 'id') == '@+id/singularity_tile_grid')
+        self.assertEqual('org.lunaris.settings.widget.UniformTileGridLayout', grid.tag)
+        self.assertEqual(6, len(grid))
+        self.assertEqual(['buttons', 'power', 'notifications', 'navigation', 'misc', 'sound'],
+                         [e.get(ANDROID + 'id').removeprefix('@+id/singularity_') for e in grid])
+        for child in grid:
+            self.assertEqual('@layout/singularity_dashboard_tile', child.get('layout'))
+            self.assertEqual('wrap_content', child.get(ANDROID + 'layout_height'))
 
     def test_new_resource_references_resolve(self):
         resources = {}
@@ -114,7 +125,7 @@ class DashboardSourceChecks(unittest.TestCase):
             for resource_type, name in re.findall(r'@(color|drawable|layout|string|style)/(\w+)', p.read_text()):
                 self.assertIn(name, resources.get(resource_type, set()), (p.name, name))
 
-    def test_wallpaper_is_dimmed_and_team_is_replaced_by_sound(self):
+    def test_wallpaper_is_dimmed_and_image_blur_has_no_new_overlay(self):
         layout = inflate_layout('preference_singularity_dashboard')
         card = next(e for e in layout.iter() if e.get(ANDROID + 'id') == '@+id/singularity_lockscreen')
         previews = [e for e in card if e.tag.endswith('LockscreenWallpaperPreviewView')]
@@ -130,9 +141,10 @@ class DashboardSourceChecks(unittest.TestCase):
         self.assertFalse(any(e.get(ANDROID + 'id') == '@+id/singularity_team' for e in layout.iter()))
         sound = [e for e in layout.iter() if e.get(ANDROID + 'id') == '@+id/singularity_sound']
         self.assertEqual(1, len(sound))
-        self.assertEqual('match_parent', sound[0].get(ANDROID + 'layout_width'))
+        self.assertEqual('vertical', sound[0].get(ANDROID + 'orientation'))
         source = (ROOT / 'src/org/lunaris/settings/utils/LockscreenWallpaperPreviewView.java').read_text()
         self.assertNotIn('setRenderEffect(', source)
+        self.assertIn('WallpaperPreviewBlur.create(', source)
         self.assertNotIn('setBitmap(', source)
         self.assertNotIn('setStream(', source)
 

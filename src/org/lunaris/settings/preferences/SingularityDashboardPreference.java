@@ -61,8 +61,6 @@ public class SingularityDashboardPreference extends Preference {
                 R.drawable.singularity_card_background);
         root.findViewById(R.id.singularity_aod).setBackgroundResource(
                 R.drawable.singularity_card_background);
-        root.findViewById(R.id.singularity_sound).setBackgroundResource(
-                R.drawable.singularity_card_background);
         root.removeOnLayoutChangeListener(mLayoutListener);
         root.addOnLayoutChangeListener(mLayoutListener);
         root.findViewById(R.id.singularity_back).setOnClickListener(v -> {
@@ -99,7 +97,7 @@ public class SingularityDashboardPreference extends Preference {
                 R.drawable.ic_singularity_navigation, "navigation");
         bind(root, R.id.singularity_misc, R.string.singularity_miscellaneous, 0,
                 R.drawable.ic_singularity_misc, "miscellaneous");
-        bind(root, R.id.singularity_sound, R.string.sound_title, R.string.sound_summary,
+        bind(root, R.id.singularity_sound, R.string.sound_title, 0,
                 R.drawable.ic_singularity_sound, "sound");
 
         int[] swatches = {R.id.singularity_swatch_one, R.id.singularity_swatch_two,

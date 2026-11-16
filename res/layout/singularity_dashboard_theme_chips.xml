@@ -25,6 +25,6 @@
         android:fontFamily="sans-serif-medium"
         android:focusable="true"
         android:clickable="true"
-        android:background="@drawable/singularity_card_background"
+        android:background="@drawable/singularity_chip_background"
         android:contentDescription="@string/font_settings_title" />
 </LinearLayout>

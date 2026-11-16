@@ -94,11 +94,4 @@
         android:key="navigation"
         android:title="@string/navigation_title"
         android:fragment="com.android.settings.gestures.SystemNavigationGestureSettings" />
-    <Preference
-        android:key="team"
-        android:title="@string/singularity_team">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:data="https://github.com/Lunaris-AOSP" />
-    </Preference>
 </PreferenceScreen>

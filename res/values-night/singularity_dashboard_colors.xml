@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="singularity_background">#000000</color>
-    <color name="singularity_card_start">#000000</color>
-    <color name="singularity_card_center">#000000</color>
-    <color name="singularity_card_end">#000000</color>
-    <color name="singularity_card_stroke">#303030</color>
-    <color name="singularity_icon_start">#222222</color>
-    <color name="singularity_icon_end">#222222</color>
-    <color name="singularity_icon_stroke">#3D3D3D</color>
-    <color name="singularity_circle_end">#222222</color>
-    <color name="singularity_line">#333333</color>
-    <color name="singularity_divider">#292929</color>
-    <color name="singularity_wallpaper_scrim">#B3000000</color>
-    <color name="singularity_text_primary">#F8F8F8</color>
-    <color name="singularity_text_secondary">#D0D0D0</color>
-    <color name="singularity_icon_accent">#87B5FF</color>
+    <color name="singularity_background">@android:color/system_surface_container_dark</color>
+    <color name="singularity_card">@android:color/system_surface_bright_dark</color>
+    <color name="singularity_text_primary">@android:color/system_on_surface_dark</color>
+    <color name="singularity_text_secondary">@android:color/system_on_surface_variant_dark</color>
+    <color name="singularity_accent">@android:color/system_primary_dark</color>
+    <color name="singularity_on_accent">@android:color/system_on_primary_dark</color>
+    <color name="singularity_divider">@android:color/system_outline_variant_dark</color>
+    <color name="singularity_icon_accent">@android:color/system_on_surface_dark</color>
+    <color name="singularity_chip">@android:color/system_surface_container_highest_dark</color>
 </resources>

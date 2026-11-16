@@ -138,6 +138,8 @@ public class SingularityDashboardPreference extends Preference {
             root.findViewById(card).findViewById(R.id.singularity_card_trailing)
                     .setVisibility(show ? View.VISIBLE : View.GONE);
         }
+        root.findViewById(R.id.singularity_themes).findViewById(
+                R.id.singularity_card_chevron).setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
     private void bind(View root, int id, int title, int summary, int icon, String key) {

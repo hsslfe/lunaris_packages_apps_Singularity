@@ -17,11 +17,14 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelFileDescriptor;
+import android.os.Process;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
 
 import com.android.settings.R;
+
+import org.lunaris.settings.utils.WallpaperPreviewCache.Key;
 
 import java.io.IOException;
 import java.util.concurrent.CancellationException;
@@ -32,7 +35,7 @@ import java.util.concurrent.Future;
 /** A read-only wallpaper backdrop whose intrinsic size never enlarges its card. */
 public class LockscreenWallpaperPreviewView extends ImageView {
     private static final String TAG = "SingularityWallpaper";
-    private static final int MAX_PREVIEW_SIZE = 2048;
+    private static final int MAX_PREVIEW_SIZE = 1024;
 
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private final WallpaperManager mWallpaperManager;
@@ -40,6 +43,8 @@ public class LockscreenWallpaperPreviewView extends ImageView {
     private ExecutorService mExecutor;
     private Future<?> mLoad;
     private int mGeneration;
+    private Key mPendingKey;
+    private Key mReadyKey;
 
     private final WallpaperManager.OnColorsChangedListener mColorsListener =
             (WallpaperColors colors, int which) -> refreshWallpaper();
@@ -83,7 +88,7 @@ public class LockscreenWallpaperPreviewView extends ImageView {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mExecutor = Executors.newSingleThreadExecutor();
+        mExecutor = createExecutor();
         mWallpaperManager.addOnColorsChangedListener(mColorsListener, mHandler);
         refreshWallpaper();
     }
@@ -103,38 +108,83 @@ public class LockscreenWallpaperPreviewView extends ImageView {
         final int width = getWidth();
         final int height = getHeight();
         final float density = getResources().getDisplayMetrics().density;
-        final int generation = ++mGeneration;
-        if (mLoad != null) {
-            mLoad.cancel(true);
+        final Key key = currentKey(width, height, density);
+        if (key.isVersioned() && key.equals(mReadyKey) && getDrawable() != null) {
+            return;
         }
+        Bitmap cached = WallpaperPreviewCache.get(key);
+        if (cached != null) {
+            cancelLoad();
+            mReadyKey = key;
+            setImageBitmap(cached);
+            return;
+        }
+        // Attach, visibility, size and initial colour callbacks can all arrive
+        // before the worker finishes. Do not repeatedly cancel the same request.
+        if (key.equals(mPendingKey)) return;
+        cancelLoad();
+        mPendingKey = key;
+        final int generation = mGeneration;
         mLoad = mExecutor.submit(() -> {
-            Drawable preview = null;
+            Bitmap preview = null;
             try {
                 Drawable source = loadWallpaper(WallpaperManager.FLAG_LOCK);
                 if (source == null) {
                     source = loadWallpaper(WallpaperManager.FLAG_SYSTEM);
                 }
                 if (source != null) {
-                    preview = new BitmapDrawable(getResources(),
-                            WallpaperPreviewBlur.create(source, width, height, density));
+                    preview = WallpaperPreviewBlur.create(source, width, height, density);
                 }
             } catch (CancellationException e) {
                 return;
             } catch (RuntimeException e) {
                 Log.w(TAG, "Could not prepare blurred wallpaper preview", e);
             }
-            final Drawable result = preview;
+            // Cache the completed pixels before posting to the view. A new view
+            // can then reuse them before its first draw, without decoding again.
+            WallpaperPreviewCache.put(key, preview);
+            final Bitmap result = preview;
             mHandler.post(() -> {
                 if (isAttachedToWindow() && generation == mGeneration) {
+                    mPendingKey = null;
+                    mLoad = null;
+                    mReadyKey = result == null ? null : key;
                     // Null clears any previous user's/wallpaper's image; the card
                     // background remains a readable fallback when access is denied.
-                    setImageDrawable(result);
+                    if (result == null) {
+                        setImageDrawable(null);
+                    } else {
+                        setImageBitmap(result);
+                    }
                 }
             });
         });
     }
 
-    private Drawable loadWallpaper(int which) {
+    private Key currentKey(int width, int height, float density) {
+        int lockId = 0;
+        int homeId = 0;
+        try {
+            lockId = getWallpaperId(WallpaperManager.FLAG_LOCK);
+            homeId = getWallpaperId(WallpaperManager.FLAG_SYSTEM);
+        } catch (RuntimeException e) {
+            lockId = 0;
+            homeId = 0;
+            Log.w(TAG, "Wallpaper version unavailable; skipping preview cache", e);
+        }
+        return new Key(Process.myUserHandle(), lockId, homeId,
+                width, height, density);
+    }
+
+    protected int getWallpaperId(int which) {
+        return mWallpaperManager.getWallpaperId(which);
+    }
+
+    protected ExecutorService createExecutor() {
+        return Executors.newSingleThreadExecutor();
+    }
+
+    protected Drawable loadWallpaper(int which) {
         try (ParcelFileDescriptor file = mWallpaperManager.getWallpaperFile(which)) {
             if (file != null) {
                 BitmapFactory.Options options = new BitmapFactory.Options();
@@ -161,14 +211,20 @@ public class LockscreenWallpaperPreviewView extends ImageView {
         }
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
+    private void cancelLoad() {
         ++mGeneration;
-        mWallpaperManager.removeOnColorsChangedListener(mColorsListener);
+        mPendingKey = null;
         if (mLoad != null) {
             mLoad.cancel(true);
             mLoad = null;
         }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        cancelLoad();
+        mReadyKey = null;
+        mWallpaperManager.removeOnColorsChangedListener(mColorsListener);
         if (mExecutor != null) {
             mExecutor.shutdownNow();
             mExecutor = null;

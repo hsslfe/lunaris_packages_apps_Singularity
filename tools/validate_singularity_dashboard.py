@@ -29,11 +29,6 @@ def colors(folder):
         RES / folder / 'singularity_dashboard_colors.xml').getroot()}
 
 
-def luminance(hex_color):
-    values = [int(hex_color[i:i + 2], 16) / 255 for i in (1, 3, 5)]
-    linear = [v / 12.92 if v <= 0.04045 else ((v + 0.055) / 1.055) ** 2.4 for v in values]
-    return sum(v * w for v, w in zip(linear, (0.2126, 0.7152, 0.0722)))
-
 
 class DashboardSourceChecks(unittest.TestCase):
     def test_navigation_preserves_original_destinations(self):
@@ -64,7 +59,7 @@ class DashboardSourceChecks(unittest.TestCase):
         layout = inflate_layout('preference_singularity_dashboard')
         ids = {e.get(ANDROID + 'id', '').split('/')[-1]: e for e in layout.iter()}
         cards = re.findall(r'bind\(root, R.id.(\w+),', PREFERENCE.read_text())
-        self.assertEqual(13, len(cards))
+        self.assertEqual(12, len(cards))
         for card in cards:
             children = {e.get(ANDROID + 'id', '').split('/')[-1]: e for e in ids[card].iter()}
             self.assertEqual('TextView', children['singularity_card_title'].tag)
@@ -73,23 +68,23 @@ class DashboardSourceChecks(unittest.TestCase):
             self.assertTrue(any(e.get(ANDROID + 'id') == '@+id/singularity_card_trailing'
                                 for e in ids[card].iter()))
 
-    def test_day_and_night_palettes_are_complete_and_readable(self):
+    def test_day_and_night_palettes_follow_settings_homepage(self):
         day, night = colors('values'), colors('values-night')
         self.assertEqual(day.keys(), night.keys())
-        for name in ('singularity_background', 'singularity_card_start',
-                     'singularity_card_center', 'singularity_card_end'):
-            self.assertEqual('#FFFFFF', day[name], name)
-            self.assertEqual('#000000', night[name], name)
-        for palette in (day, night):
-            for text in ('singularity_text_primary', 'singularity_text_secondary'):
-                for background in ('singularity_background', 'singularity_card_start',
-                                   'singularity_card_center', 'singularity_card_end'):
-                    a, b = sorted((luminance(palette[text]), luminance(palette[background])))
-                    self.assertGreaterEqual((b + 0.05) / (a + 0.05), 4.5, (text, background))
+        for mode, palette in (('light', day), ('dark', night)):
+            tokens = {'background': 'surface_container', 'card': 'surface_bright',
+                      'text_primary': 'on_surface', 'text_secondary': 'on_surface_variant',
+                      'accent': 'primary'}
+            for name, token in tokens.items():
+                self.assertEqual('@android:color/system_' + token + '_' + mode,
+                                 palette['singularity_' + name])
         styles = ET.parse(RES / 'values/singularity_dashboard_styles.xml').getroot()
         for item in styles.iter('item'):
             if item.get('name') == 'android:textColor':
                 self.assertTrue(item.text.startswith('@color/singularity_'))
+        card = ET.parse(RES / 'drawable/singularity_card_background.xml').getroot()
+        self.assertFalse(list(card.iter('stroke')), 'Homepage cards have filled surfaces')
+        self.assertFalse(list(card.iter('gradient')))
 
     def test_weighted_shortcut_rows_measure_their_own_height(self):
         layout = inflate_layout('preference_singularity_dashboard')
@@ -119,14 +114,25 @@ class DashboardSourceChecks(unittest.TestCase):
             for resource_type, name in re.findall(r'@(color|drawable|layout|string|style)/(\w+)', p.read_text()):
                 self.assertIn(name, resources.get(resource_type, set()), (p.name, name))
 
-    def test_wallpaper_blur_is_scoped_to_image_layer(self):
+    def test_wallpaper_is_dimmed_and_team_is_replaced_by_sound(self):
         layout = inflate_layout('preference_singularity_dashboard')
         card = next(e for e in layout.iter() if e.get(ANDROID + 'id') == '@+id/singularity_lockscreen')
-        previews = [e for e in card if e.tag.endswith('BlurredLockscreenWallpaperView')]
+        previews = [e for e in card if e.tag.endswith('LockscreenWallpaperPreviewView')]
         self.assertEqual(1, len(previews))
         self.assertTrue(any(e.tag == 'TextClock' for e in card.iter()))
         self.assertEqual('true', card.get(ANDROID + 'clipToOutline'))
-        source = (ROOT / 'src/org/lunaris/settings/utils/BlurredLockscreenWallpaperView.java').read_text()
+        dim = next(e for e in card if e.get(ANDROID + 'id') == '@+id/singularity_lock_dim')
+        self.assertEqual('0.3', dim.get(ANDROID + 'alpha'))
+        self.assertEqual('@drawable/singularity_wallpaper_dim', dim.get(ANDROID + 'background'))
+        shade = ET.parse(RES / 'drawable/singularity_wallpaper_dim.xml').getroot()
+        self.assertEqual('@android:color/black', shade.find('solid').get(ANDROID + 'color'))
+        self.assertEqual('88dp', card.get(ANDROID + 'minHeight'))
+        self.assertFalse(any(e.get(ANDROID + 'id') == '@+id/singularity_team' for e in layout.iter()))
+        sound = [e for e in layout.iter() if e.get(ANDROID + 'id') == '@+id/singularity_sound']
+        self.assertEqual(1, len(sound))
+        self.assertEqual('match_parent', sound[0].get(ANDROID + 'layout_width'))
+        source = (ROOT / 'src/org/lunaris/settings/utils/LockscreenWallpaperPreviewView.java').read_text()
+        self.assertNotIn('setRenderEffect(', source)
         self.assertNotIn('setBitmap(', source)
         self.assertNotIn('setStream(', source)
 

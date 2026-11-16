@@ -70,6 +70,10 @@ class SwitchThumbIconPickerPreference @JvmOverloads constructor(
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
 
+        // This full-page picker should not inherit the rounded preference card background.
+        // The preview and icon tiles provide their own independent surfaces.
+        holder.itemView.background = null
+
         // Before: the stock switch. After: the highlighted choice. OFF is the same in both.
         (holder.findViewById(R.id.preview_before_on) as SwitchPreviewView).apply {
             isOn = true

@@ -12,7 +12,9 @@ The worker centre-crops the source to the card's aspect ratio, downsamples it to
 
 The existing black layer with alpha `0.3` still dims the preview by 30% in both themes. The clock, title and lock icon remain sharp. The source bitmap and the device's wallpaper are never modified. Resize, detach and newer wallpaper requests cancel stale processing.
 
-Decoding runs off the main thread, samples static images to at most 2048 pixels per dimension, and closes the file descriptor. The loader reads the separate lockscreen image first, then falls back to the home wallpaper when they are shared. Live wallpapers use provider thumbnails. If wallpaper access is unavailable, the filled card remains visible. Attachment, window visibility and wallpaper colour changes refresh the image. Detaching unregisters listeners, cancels work and clears stale results.
+Decoding runs off the main thread, samples static images to at most 1024 pixels per dimension, and closes the file descriptor. The loader reads the separate lockscreen image first, then falls back to the home wallpaper when they are shared. Live wallpapers use provider thumbnails. If wallpaper access is unavailable, the filled card remains visible. Attachment, window visibility and wallpaper colour changes check the wallpaper version. Identical ready or pending requests do not restart the worker. Detaching unregisters listeners, cancels work and clears stale results.
+
+A process-local LRU cache keeps up to four finished blurred images (at most 4 MiB). Keys include the user, both lock/home wallpaper IDs, card dimensions and display density. A returning card can restore a valid cached bitmap before its first draw. Unknown versions are not cached. A changed wallpaper keeps the current blurred image visible until its replacement is ready; raw source images are never published. First-time loads still run asynchronously. Detach cleanup releases the view and executor while keeping finished, context-free bitmaps available for reopening.
 
 ## Integration
 
@@ -43,6 +45,8 @@ They cover original destinations, card IDs, resource references, homepage colour
 The API 36 Robolectric fixture in `tests/robotests/src/org/lunaris/settings/DashboardLayoutTest.java` measures the compiled XML at 320/360/393/600dp, in both themes, at 1.0/1.3/2.0 font scales, and in LTR/RTL. The layout matrix also verifies all six tile heights, widths, row alignment and RTL placement. Additional regressions load a tall bitmap, check that it cannot enlarge the lockscreen card, verify the image fills the card, and render a white wallpaper to check the 30% dim. Run it in a host with API 36 Robolectric and the Settings resource APK; this overlay does not define a standalone test module.
 
 `WallpaperPreviewBlurTest` checks that constant colours and edges stay opaque and untinted, real transitions soften in both directions, source pixels stay unchanged, preview allocation is bounded, and cancellation is respected.
+
+`WallpaperPreviewLoadingTest` verifies that duplicate lifecycle callbacks do not restart work, reopening restores the finished bitmap without a worker run, a replacement view can reuse pixels before the old UI callback, wallpaper changes retain the ready blur until replacement, and cache keys isolate users, versions, sizes and density. It also checks bounded eviction without recycling images that may still be on screen.
 
 The focused local harness compiles resources with AAPT2 / API 36 and Java against AndroidX, with stubs for missing ROM-specific Settings classes. Native Android layout renders are inspected in both themes. It is not a complete ROM build or device test.
 

@@ -1,6 +1,10 @@
 # Singularity dashboard
 
-The page uses the same Material colour roles as the Settings homepage: `surfaceContainer` for the page, `surfaceBright` for filled cards, `onSurface` / `onSurfaceVariant` for text, and the primary colour at 50% opacity for circular icon wells. Android's matching `system_*_light` and `system_*_dark` resources follow the active system palette in both themes. Cards have 24dp corners without the previous outlines or blue gradients. Labels inherit the Settings font family.
+The page uses the same Material colour roles as the Settings homepage: `surfaceContainer` for the page, `surfaceBright` for filled cards, and `onSurface` / `onSurfaceVariant` for text. Android's matching `system_*_light` and `system_*_dark` resources follow the active system palette in both themes. Cards have 24dp corners without the previous outlines or blue gradients. Labels inherit the Settings font family.
+
+The six leading icons from Monet Color through AOD Customizations follow the homepage's saved global icon colour, shape and Accent / Plain / Filled style. `HomepageStyledIconView` reads those fields from the existing `settings_homepage_layout` store, observes changes while attached, and reloads when returning to the page. Clearing or resetting the homepage choices restores the theme defaults. The existing glyphs and icon dimensions are preserved; the six lower shortcut tiles retain their plain icons.
+
+Accent uses a 50% accent background with an `onSurface` glyph, Plain uses an accent glyph without a background, and Filled uses the accent background with `onPrimary` (or black/white contrast for a custom colour). Circle, Arrow, Pill, Triangle, Gem, Cookie 4, Cookie 6 and Clover 4 use the same Material shape definitions and bounds-centering as the homepage. The view draws the existing Material3 `RoundedPolygon` curves directly; no additional Compose view or new app dependency is introduced.
 
 The page scrolls naturally to keep controls and larger text readable. The layout contains a compact lockscreen wallpaper card, Monet and wallpaper rows, theme/font shortcuts, Statusbar and QS cards, AOD, and a two-row grid of six matching tiles: Buttons, Powermenu, Notification, Navigation, Miscellaneous and Sound. Team has been removed. Theme Packs opens the existing User Interface settings; its buttons open the existing theme store and font picker.
 
@@ -41,6 +45,8 @@ python3 tools/validate_singularity_dashboard.py
 ```
 
 They cover original destinations, card IDs, resource references, homepage colour-role aliases, filled surfaces, weighted row sizing, the existing 30% dim layer, and all six controls sharing the same vertical tile layout.
+
+`HomepageStyledIconViewTest` exercises the three icon styles in both themes, custom colour contrast, all eight shapes, live changes, detach/reattach, resetting preferences, and invalid saved data. The XML checks ensure the six upper icons use the styled view while the six lower tiles keep their existing ImageViews.
 
 The API 36 Robolectric fixture in `tests/robotests/src/org/lunaris/settings/DashboardLayoutTest.java` measures the compiled XML at 320/360/393/600dp, in both themes, at 1.0/1.3/2.0 font scales, and in LTR/RTL. The layout matrix also verifies all six tile heights, widths, row alignment and RTL placement. Additional regressions load a tall bitmap, check that it cannot enlarge the lockscreen card, verify the image fills the card, and render a white wallpaper to check the 30% dim. Run it in a host with API 36 Robolectric and the Settings resource APK; this overlay does not define a standalone test module.
 

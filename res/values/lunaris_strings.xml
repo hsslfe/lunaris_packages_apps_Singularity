@@ -3159,6 +3159,7 @@
     <string name="edge_light_animation_direction_title">Animation direction</string>
     <string name="edge_light_direction_normal">Normal</string>
     <string name="edge_light_direction_reversed">Reversed</string>
+
     <string name="boot_animation_custom_pick">Pick ZIP file</string>
     <string name="boot_animation_custom_pick_summary">Select a custom bootanimation.zip</string>
     <string name="boot_animation_applied_error">Failed to apply boot animation</string>

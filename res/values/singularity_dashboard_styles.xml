@@ -20,7 +20,6 @@
         <item name="android:layout_width">40dp</item>
         <item name="android:layout_height">40dp</item>
         <item name="android:padding">11dp</item>
-        <item name="android:background">@drawable/singularity_icon_background</item>
         <item name="android:importantForAccessibility">no</item>
     </style>
     <style name="SingularityCardArrow">

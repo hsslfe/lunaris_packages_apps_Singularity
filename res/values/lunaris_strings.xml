@@ -3167,4 +3167,19 @@
     <string name="boot_animation_no_preview">No preview available</string>    
     <string name="boot_animation_style_unknown">Unknown</string>
 
+
+    <!-- Liquid Glass -->
+    <string name="liquid_glass_title">Liquid Glass</string>
+    <string name="liquid_glass_summary">Draw blurred surfaces as glass with a lit rim</string>
+    <string name="liquid_glass_use_title">Use Liquid Glass</string>
+    <string name="liquid_glass_use_summary">Turn the frosted surfaces of the system, such as the Dynamic Island cards, into glass</string>
+    <string name="liquid_glass_style_title">Style</string>
+    <string name="liquid_glass_style_ios">iOS</string>
+    <string name="liquid_glass_style_coloros">ColorOS</string>
+    <string name="liquid_glass_refraction_title">Refraction</string>
+    <string name="liquid_glass_refraction_summary">How far the rim of the glass bends in what lies just beyond it</string>
+    <string name="liquid_glass_shade_category">Shade</string>
+    <string name="liquid_glass_dual_tone_title">Dual tone shade</string>
+    <string name="liquid_glass_dual_tone_summary">A faint tint behind notifications, so they stand apart from Quick Settings</string>
+
 </resources>

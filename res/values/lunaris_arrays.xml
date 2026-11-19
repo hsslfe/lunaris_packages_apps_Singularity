@@ -2177,4 +2177,15 @@
         <item>/product/media/audio/ui/Windows_Error_Unlock.ogg</item>
     </string-array>
 
+
+    <string-array name="liquid_glass_style_entries">
+        <item>@string/liquid_glass_style_ios</item>
+        <item>@string/liquid_glass_style_coloros</item>
+    </string-array>
+
+    <string-array name="liquid_glass_style_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
 </resources>

@@ -12,6 +12,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.UserHandle
 import android.provider.Settings
+import android.security.trickystore.KeyBoxManager
 import android.util.Base64
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -62,6 +63,7 @@ class TrickyStore : SettingsPreferenceFragment() {
     private var currentRevocationStatus: RevocationStatus = RevocationStatus.UNKNOWN
     private var currentRevocationReason: String = ""   // e.g. "KEY_COMPROMISE"
     private var isCheckInProgress = false
+    private var isKeyboxFetchInProgress = false
     private var rkpController: DuckRkpPreferenceController? = null
 
     // ---- Trust anchors (SHA-256 of DER-encoded cert) ------------------------
@@ -91,6 +93,10 @@ class TrickyStore : SettingsPreferenceFragment() {
 
         // Keys & setting names
         private const val KEYBOX_KEY                 = "spoof_trickystore_keybox"
+        // Evolution X hosted latest keybox. A16 installation uses the existing Binder API.
+        private const val KEYBOX_FETCH_URL =
+            "https://gitea.com/Evolution-X/keybox/raw/branch/main/keybox.xml"
+        private const val KEYBOX_MAX_BYTES = 196608
         private const val TARGET_KEY                 = TrickyStoreAppSettings.TARGET_KEY
         internal const val PATCH_KEY                 = "spoof_trickystore_patch"
         private const val LAST_REVOCATION_CHECK_KEY  = "spoof_trickystore_last_revocation_check"
@@ -206,6 +212,11 @@ class TrickyStore : SettingsPreferenceFragment() {
             }
             refreshStatus()
         }.also { it.start() }
+        findPreference<Preference>("ts_fetch_keybox")?.setOnPreferenceClickListener {
+            requestLatestKeybox()
+            true
+        }
+
         findPreference<Preference>("ts_import_keybox")?.isEnabled =
             UserHandle.myUserId() == UserHandle.USER_SYSTEM
 
@@ -290,6 +301,17 @@ class TrickyStore : SettingsPreferenceFragment() {
                 else -> getString(R.string.ts_no_keybox)
             }
 
+        findPreference<Preference>("ts_fetch_keybox")?.apply {
+            // Duck RKP owns the active keybox when enabled; never replace it.
+            isVisible = rkpController?.isRkpEnabled != true
+            isEnabled = UserHandle.myUserId() == UserHandle.USER_SYSTEM &&
+                !isKeyboxFetchInProgress
+            summary = getString(
+                if (isKeyboxFetchInProgress) R.string.ts_fetch_keybox_fetching
+                else R.string.ts_fetch_keybox_summary
+            )
+        }
+
         findPreference<Preference>("ts_delete_keybox")?.isEnabled =
             keyboxExists && UserHandle.myUserId() == UserHandle.USER_SYSTEM
 
@@ -364,6 +386,137 @@ class TrickyStore : SettingsPreferenceFragment() {
             summary
         else
             "$summary\n${getString(R.string.ts_revocation_last_checked, lastChecked)}"
+    }
+
+
+    // ---- Manual latest-keybox fetch (Evolution X source, A16-compatible) -----
+
+    private fun requestLatestKeybox() {
+        if (isKeyboxFetchInProgress || !isTrickyStoreEnabled ||
+            UserHandle.myUserId() != UserHandle.USER_SYSTEM) return
+        if (rkpController?.isRkpEnabled == true) {
+            toast(getString(R.string.ts_fetch_keybox_rkp_disabled))
+            return
+        }
+
+        if (activeKeybox().isNullOrEmpty()) {
+            fetchLatestKeybox()
+        } else {
+            AlertDialog.Builder(requireContext())
+                .setTitle(R.string.ts_fetch_keybox_replace_title)
+                .setMessage(R.string.ts_fetch_keybox_replace_message)
+                .setPositiveButton(R.string.ts_fetch_keybox) { _, _ ->
+                    fetchLatestKeybox()
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
+        }
+    }
+
+    /**
+     * Fetch, validate, then install. No write happens until the full download,
+     * certificate-chain and revocation checks pass. A rejected download leaves
+     * the current keybox untouched. The Android 16 framework owns the write.
+     */
+    private fun fetchLatestKeybox() {
+        if (isKeyboxFetchInProgress || !isTrickyStoreEnabled ||
+            UserHandle.myUserId() != UserHandle.USER_SYSTEM) return
+
+        val resolver = requireContext().contentResolver
+        val originalKeybox = activeKeybox()
+        isKeyboxFetchInProgress = true
+        refreshStatus()
+
+        lifecycleScope.launch {
+            val fetched = withContext(Dispatchers.IO) {
+                runCatching {
+                    val activityManager = ActivityManager.getService()
+                    check(activityManager.duckRkpState?.getBoolean("enabled") != true) {
+                        "Device RKP is enabled"
+                    }
+
+                    val connection = URL(KEYBOX_FETCH_URL).openConnection() as HttpURLConnection
+                    val xml = try {
+                        connection.connectTimeout = 10_000
+                        connection.readTimeout = 10_000
+                        connection.setRequestProperty("Accept", "application/xml, text/xml, */*")
+                        check(connection.responseCode == HttpURLConnection.HTTP_OK) {
+                            "HTTP " + connection.responseCode
+                        }
+                        val bytes = connection.inputStream.use {
+                            it.readNBytes(KEYBOX_MAX_BYTES + 1)
+                        }
+                        require(bytes.isNotEmpty() && bytes.size <= KEYBOX_MAX_BYTES) {
+                            "Empty or oversized keybox"
+                        }
+                        bytes.toString(Charsets.UTF_8).trim()
+                    } finally {
+                        connection.disconnect()
+                    }
+
+                    require(decodeKeyboxXml(xml) != null && extractChains(xml).isNotEmpty()) {
+                        "Downloaded keybox XML is malformed"
+                    }
+                    // Use the same Android 16 parser as the attestation service.
+                    // It checks key/certificate correspondence and complete XML.
+                    val frameworkProblem = KeyBoxManager.validate(xml)
+                    check(frameworkProblem == null) {
+                        "Framework keybox validation failed: " + frameworkProblem
+                    }
+                    val checked = performRevocationCheck(xml)
+                    check(checked.status == RevocationStatus.VALID) {
+                        "Keybox validation failed (" + checked.status.name + ")"
+                    }
+
+                    // Do not disturb a newer manual import or a newly enabled RKP.
+                    check(activityManager.duckRkpState?.getBoolean("enabled") != true) {
+                        "Device RKP was enabled during the download"
+                    }
+                    check(activeKeybox() == originalKeybox) {
+                        "The installed keybox changed during the download"
+                    }
+                    check(Settings.System.getInt(resolver, TRICKYSTORE_ENABLED_KEY, 1) != 0) {
+                        "TrickyStore was disabled during the download"
+                    }
+
+                    if (decodeKeyboxXml(originalKeybox ?: "")?.trim() == xml) {
+                        false // Already installed; no write or restart required.
+                    } else {
+                        activityManager.setSpoofTrickyStoreKeyBox(
+                            Base64.encodeToString(xml.toByteArray(Charsets.UTF_8), Base64.NO_WRAP)
+                        )
+                        true
+                    }
+                }
+            }
+
+            isKeyboxFetchInProgress = false
+            if (!isAdded) return@launch
+            fetched.fold(
+                onSuccess = { changed ->
+                    if (changed) {
+                        // A stale verdict must not describe the newly installed keybox.
+                        Settings.Secure.putString(resolver, LAST_REVOCATION_STATUS_KEY, "")
+                        Settings.Secure.putString(resolver, LAST_REVOCATION_REASON_KEY, "")
+                        Settings.Secure.putLong(resolver, LAST_REVOCATION_CHECK_KEY, 0L)
+                        currentRevocationStatus = RevocationStatus.UNKNOWN
+                        currentRevocationReason = ""
+                        toast(getString(R.string.ts_fetch_keybox_success))
+                        refreshStatus()
+                        checkKeyboxRevocation()
+                    } else {
+                        toast(getString(R.string.ts_fetch_keybox_unchanged))
+                        refreshStatus()
+                    }
+                },
+                onFailure = { error ->
+                    Log.w(TAG, "Latest keybox fetch failed; existing keybox kept", error)
+                    toast(getString(R.string.ts_fetch_keybox_failed,
+                        error.message ?: error.javaClass.simpleName))
+                    refreshStatus()
+                }
+            )
+        }
     }
 
     // ---- Revocation check ---------------------------------------------------

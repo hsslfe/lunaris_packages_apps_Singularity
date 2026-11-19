@@ -35,6 +35,10 @@ internal class DuckRkpPreferenceController(
     val hasKeybox: Boolean
         get() = state?.getBoolean("has_keybox") == true
 
+    /** Used by the parent screen to hide online fetching while RKP is active. */
+    val isRkpEnabled: Boolean
+        get() = state?.getBoolean("enabled") == true
+
     val hasGeneratedKeybox: Boolean
         get() = hasKeybox && state?.getBoolean("imported") == false
 

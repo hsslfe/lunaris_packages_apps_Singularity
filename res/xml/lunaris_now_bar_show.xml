@@ -52,6 +52,14 @@
         android:key="now_bar_charging"
         android:title="@string/now_bar_charging"
         android:defaultValue="false" />
+    <org.lunaris.settings.preferences.NowBarChipsPreference
+        android:key="now_bar_battery_mode"
+        android:title="@string/now_bar_battery_mode"
+        android:summary="@string/now_bar_battery_mode_summary"
+        android:entries="@array/now_bar_battery_mode_entries"
+        android:entryValues="@array/now_bar_two_values"
+        android:defaultValue="0"
+        android:dependency="now_bar_charging" />
     <lineageos.preference.SystemSettingSwitchPreference
         android:key="now_bar_flashlight"
         android:title="@string/now_bar_flashlight"

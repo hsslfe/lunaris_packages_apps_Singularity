@@ -89,16 +89,6 @@ public class NowBarSettings extends SettingsPreferenceFragment {
         }
         final NowBarChipsPreference looks = findPreference("now_bar_look");
         looks.setOnChipClicked(this::applyLook);
-        final androidx.preference.Preference enable = findPreference("now_bar");
-        if (enable != null) {
-            enable.setOnPreferenceChangeListener((pref, value) -> {
-                if (Boolean.TRUE.equals(value)) {
-                    Settings.Secure.putIntForUser(getContentResolver(),
-                            "ax_dynamic_bar_keyguard_music_pill", 0, UserHandle.USER_CURRENT);
-                }
-                return true;
-            });
-        }
     }
 
     private void applyLook(int index) {

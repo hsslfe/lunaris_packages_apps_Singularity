@@ -79,13 +79,14 @@
             android:max="96"
             app:min="48"
             app:updatesContinuously="true" />
-        <org.lunaris.settings.preferences.NowBarChipsPreference
+        <org.lunaris.settings.preferences.SystemSettingSeekBarPreference
             android:key="now_bar_width"
             android:title="@string/now_bar_width"
             android:summary="@string/now_bar_width_summary"
-            android:entries="@array/now_bar_width_entries"
-            android:entryValues="@array/now_bar_three_values"
-            android:defaultValue="1" />
+            android:defaultValue="180"
+            android:max="420"
+            app:min="120"
+            app:updatesContinuously="true" />
         <org.lunaris.settings.preferences.SystemSettingSeekBarPreference
             android:key="now_bar_corners"
             android:title="@string/now_bar_corners"

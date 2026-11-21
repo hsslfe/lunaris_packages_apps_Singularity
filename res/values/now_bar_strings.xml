@@ -74,12 +74,7 @@
     <string name="now_bar_size">Size and shape</string>
     <string name="now_bar_height">Height</string>
     <string name="now_bar_width">Width</string>
-    <string name="now_bar_width_summary">Full moves the shortcuts above the bar</string>
-    <string-array name="now_bar_width_entries">
-        <item>Narrow</item>
-        <item>Between shortcuts</item>
-        <item>Full</item>
-    </string-array>
+    <string name="now_bar_width_summary">Adjust the collapsed bar width in dp</string>
     <string name="now_bar_corners">Corners</string>
     <string name="now_bar_raise">Raise</string>
     <string name="now_bar_music_category">Music</string>

@@ -23,6 +23,12 @@
     <string name="now_bar_glance_settings_summary">Where At a Glance and its Sports are set up, when the Google app offers them on this device</string>
     <string name="now_bar_recording">Screen and voice recording</string>
     <string name="now_bar_charging">Charging</string>
+    <string name="now_bar_battery_mode">Battery information</string>
+    <string name="now_bar_battery_mode_summary">Choose when Now Bar shows battery information. Always uses a compact icon and percentage when idle.</string>
+    <string-array name="now_bar_battery_mode_entries">
+        <item>While charging</item>
+        <item>Always</item>
+    </string-array>
     <string name="now_bar_flashlight">Flashlight</string>
     <string name="now_bar_buds">Earbuds and watches</string>
     <string name="now_bar_buds_summary">Battery of a connected device: left, right and case for earbuds</string>

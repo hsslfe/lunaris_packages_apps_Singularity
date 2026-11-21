@@ -98,6 +98,8 @@
         <item>Song only</item>
     </string-array>
     <string name="now_bar_text_size">Text size</string>
+    <string name="now_bar_scroll_text">Scrolling text</string>
+    <string name="now_bar_scroll_text_summary">Move long titles and labels inside the Now Bar. Turn off to keep text still.</string>
     <string-array name="now_bar_two_values" translatable="false">
         <item>0</item>
         <item>1</item>

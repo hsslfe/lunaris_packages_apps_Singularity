@@ -7,6 +7,7 @@ package org.lunaris.settings.fragments.lockscreen;
 import android.os.Bundle;
 import android.os.UserHandle;
 import org.lunaris.settings.preferences.NowBarChipsPreference;
+import org.lunaris.settings.preferences.SystemSettingSeekBarPreference;
 import android.provider.Settings;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +77,16 @@ public class NowBarSettings extends SettingsPreferenceFragment {
 
     private void load() {
         addPreferencesFromResource(R.xml.lunaris_now_bar);
+        // Unlike the old three-choice width presets, allow every single dp.
+        // Set this on the actual preference so it works regardless of XML
+        // attribute namespace parsing on different Settings builds.
+        final SystemSettingSeekBarPreference width = findPreference(WIDTH);
+        if (width != null) {
+            width.setInterval(1);
+            width.setMin(120);
+            width.setMax(420);
+            width.setUpdatesContinuously(true);
+        }
         final NowBarChipsPreference looks = findPreference("now_bar_look");
         looks.setOnChipClicked(this::applyLook);
         final androidx.preference.Preference enable = findPreference("now_bar");

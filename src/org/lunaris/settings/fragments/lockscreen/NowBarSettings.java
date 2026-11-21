@@ -9,8 +9,6 @@ import android.os.UserHandle;
 import org.lunaris.settings.preferences.NowBarChipsPreference;
 import org.lunaris.settings.preferences.SystemSettingSeekBarPreference;
 import android.provider.Settings;
-import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.preference.PreferenceScreen;
 
@@ -42,7 +40,7 @@ public class NowBarSettings extends SettingsPreferenceFragment {
 
     /** The looks row, in order: each is the defaults plus these key and value pairs. */
     private static final Object[][] LOOKS = {
-        // Lunaris: native lock-screen music-pill proportions; every control below still works.
+        // Lunaris Now Bar proportions; each look remains fully customizable.
         {MATERIAL, 1, COLOR, 1, OPACITY, 100, HEIGHT, 58, WIDTH, 180,
             OUTLINE, 1, SHADOW, 0, ART, 0, BUTTONS, 1, TEXT, 1, WAVE, 0},
         {},

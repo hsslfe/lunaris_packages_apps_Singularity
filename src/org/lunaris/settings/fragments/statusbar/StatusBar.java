@@ -194,7 +194,8 @@ public class StatusBar extends SettingsPreferenceFragment implements
             }
         }
         for (String key : new String[] {
-                "status_bar_show_lyric", "ax_dynamic_bar_enabled", "cutout_progress_enabled" }) {
+                "status_bar_show_lyric", "ax_dynamic_bar_enabled",
+                "cutout_progress_enabled", "lunaris_heads_up_drop_enabled" }) {
             SecureSettingPrimarySwitchPreference preference = findPreference(key);
             if (preference != null) {
                 preference.loadValue();

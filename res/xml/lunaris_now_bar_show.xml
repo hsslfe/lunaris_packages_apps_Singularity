@@ -74,10 +74,5 @@
             android:key="now_bar_aod"
             android:title="@string/now_bar_aod"
             android:defaultValue="true" />
-        <lineageos.preference.SystemSettingSwitchPreference
-            android:key="now_bar_chip"
-            android:title="@string/now_bar_chip"
-            android:summary="@string/now_bar_chip_summary"
-            android:defaultValue="true" />
     </PreferenceCategory>
 </PreferenceScreen>

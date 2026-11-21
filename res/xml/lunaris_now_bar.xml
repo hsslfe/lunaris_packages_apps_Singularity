@@ -133,6 +133,11 @@
             app:min="11"
             app:updatesContinuously="true" />
         <lineageos.preference.SystemSettingSwitchPreference
+            android:key="now_bar_scroll_text"
+            android:title="@string/now_bar_scroll_text"
+            android:summary="@string/now_bar_scroll_text_summary"
+            android:defaultValue="true" />
+        <lineageos.preference.SystemSettingSwitchPreference
             android:key="now_bar_wave"
             android:title="@string/now_bar_wave"
             android:defaultValue="false" />

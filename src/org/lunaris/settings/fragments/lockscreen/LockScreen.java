@@ -112,6 +112,17 @@ public class LockScreen extends SettingsPreferenceFragment
         mKeyguardScrim = (SwitchPreferenceCompat) findPreference(KEY_KEYGUARD_SCRIM);
         mKeyguardScrim.setOnPreferenceChangeListener(this);
 
+        final Preference musicPill = findPreference("ax_dynamic_bar_keyguard_music_pill");
+        if (musicPill != null) {
+            musicPill.setOnPreferenceChangeListener((preference, value) -> {
+                if (Boolean.TRUE.equals(value)) {
+                    Settings.System.putIntForUser(getContext().getContentResolver(),
+                            "now_bar", 0, UserHandle.USER_CURRENT);
+                }
+                return true;
+            });
+        }
+
         updateWeatherSettings();
     }
 
@@ -159,6 +170,14 @@ public class LockScreen extends SettingsPreferenceFragment
     @Override
     public void onResume() {
         super.onResume();
+        // Reflect a switch made in Now Bar settings when navigating back here.
+        final SwitchPreferenceCompat musicPill =
+                findPreference("ax_dynamic_bar_keyguard_music_pill");
+        if (musicPill != null) {
+            musicPill.setChecked(Settings.Secure.getIntForUser(
+                    getContext().getContentResolver(),
+                    "ax_dynamic_bar_keyguard_music_pill", 0, UserHandle.USER_CURRENT) == 1);
+        }
         for (String key : new String[] { "ls_media_art_enabled", "nowplaying_enabled" }) {
             SystemSettingPrimarySwitchPreference preference = findPreference(key);
             if (preference != null) {

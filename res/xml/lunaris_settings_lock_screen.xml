@@ -56,6 +56,13 @@
             android:summary="@string/dynamic_bar_keyguard_music_pill_summary"
             android:defaultValue="false" />
 
+        <!-- Independent Now Bar appearance; original Lunaris music pill stays above. -->
+        <Preference
+            android:key="resurrected_now_bar_settings"
+            android:title="@string/now_bar_title"
+            android:summary="@string/now_bar_summary"
+            android:fragment="org.lunaris.settings.fragments.lockscreen.NowBarSettings" />
+
         <!-- Pulse music visualizer -->
         <org.lunaris.settings.preferences.SecureSettingPrimarySwitchPreference
             android:key="lockscreen_pulse_enabled"

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: The Resurrected Remix Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="now_bar_reset">Reset</string>
+    <string name="now_bar_title">Now Bar</string>
+    <string name="now_bar_summary">Live activities at the bottom of the lock screen</string>
+    <string name="now_bar_show">Show</string>
+    <string name="now_bar_music">Music and video</string>
+    <string name="now_bar_timers">Timers, stopwatch and alarms</string>
+    <string name="now_bar_calls">Calls</string>
+    <string name="now_bar_hide_call">Hide the call notification</string>
+    <string name="now_bar_hide_call_summary">On the lock screen, a call in the Now Bar is not also listed as a notification</string>
+    <string name="now_bar_live">Live Updates</string>
+    <string name="now_bar_live_summary">Navigation, rides, deliveries, scores</string>
+    <string name="now_bar_scores">Live scores</string>
+    <string name="now_bar_live_apps">Apps for Live Updates</string>
+    <string name="now_bar_live_apps_all">All apps</string>
+    <string name="now_bar_pin">Pinned to the always-on display</string>
+    <string name="now_bar_pin_none">None. Tap to pick an app, or hold a Live Update in the bar</string>
+    <string name="now_bar_pin_change">Change</string>
+    <string name="now_bar_unpin_question">Unpin <xliff:g id="app" example="Uber">%1$s</xliff:g>?</string>
+    <string name="now_bar_unpin">Unpin</string>
+    <string name="now_bar_scores_summary">Games you follow in At a Glance</string>
+    <string name="now_bar_glance_settings">Google app settings</string>
+    <string name="now_bar_glance_settings_summary">Where At a Glance and its Sports are set up, when the Google app offers them on this device</string>
+    <string name="now_bar_recording">Screen and voice recording</string>
+    <string name="now_bar_charging">Charging</string>
+    <string name="now_bar_flashlight">Flashlight</string>
+    <string name="now_bar_buds">Earbuds and watches</string>
+    <string name="now_bar_buds_summary">Battery of a connected device: left, right and case for earbuds</string>
+    <string name="now_bar_wave">Wave animation</string>
+    <string name="now_bar_aod">Show on always-on display</string>
+    <string name="now_bar_chip">Chip in the status bar</string>
+    <string name="now_bar_chip_summary">Playing music and timers next to the clock while unlocked</string>
+    <string name="now_bar_footer">Enable the lock-screen Now Bar independently from Dynamic Bar. Swipe left or right between enabled live activities and tap the bar for the matching controls. Use "What shows in the bar" to choose activities and where they appear. The original Lunaris Music Pill remains separately selectable.</string>
+    <string name="now_bar_looks">Looks</string>
+    <string-array name="now_bar_looks_entries">
+        <item>Lunaris</item>
+        <item>Default</item>
+        <item>Liquid Glass</item>
+        <item>Mini</item>
+        <item>Big</item>
+        <item>Neon</item>
+        <item>Glass card</item>
+    </string-array>
+    <string name="now_bar_style">Style</string>
+    <string name="now_bar_material">Material</string>
+    <string name="now_bar_material_summary">Liquid Glass uses the glass you set in Theme</string>
+    <string-array name="now_bar_material_entries">
+        <item>Solid</item>
+        <item>Liquid Glass</item>
+    </string-array>
+    <string name="now_bar_color">Color</string>
+    <string-array name="now_bar_color_entries">
+        <item>Album art</item>
+        <item>Accent</item>
+        <item>Dark</item>
+    </string-array>
+    <string name="now_bar_opacity">Opacity</string>
+    <string name="now_bar_opacity_summary">With Liquid Glass, how much color tints the glass</string>
+    <string name="now_bar_outline">Outline</string>
+    <string-array name="now_bar_outline_entries">
+        <item>None</item>
+        <item>Thin</item>
+        <item>Accent</item>
+    </string-array>
+    <string name="now_bar_shadow">Shadow</string>
+    <string-array name="now_bar_shadow_entries">
+        <item>Off</item>
+        <item>Soft</item>
+        <item>Glow</item>
+    </string-array>
+    <string name="now_bar_more">More activities</string>
+    <string-array name="now_bar_more_entries">
+        <item>Just swipe</item>
+        <item>Dots</item>
+        <item>Peek behind</item>
+    </string-array>
+    <string name="now_bar_size">Size and shape</string>
+    <string name="now_bar_height">Height</string>
+    <string name="now_bar_width">Width</string>
+    <string name="now_bar_width_summary">Full moves the shortcuts above the bar</string>
+    <string-array name="now_bar_width_entries">
+        <item>Narrow</item>
+        <item>Between shortcuts</item>
+        <item>Full</item>
+    </string-array>
+    <string name="now_bar_corners">Corners</string>
+    <string name="now_bar_raise">Raise</string>
+    <string name="now_bar_music_category">Music</string>
+    <string name="now_bar_art">Album art</string>
+    <string-array name="now_bar_art_entries">
+        <item>Circle</item>
+        <item>Rounded</item>
+        <item>Square</item>
+        <item>Off</item>
+    </string-array>
+    <string name="now_bar_buttons">Buttons</string>
+    <string-array name="now_bar_buttons_entries">
+        <item>Skip and play</item>
+        <item>Play only</item>
+        <item>None</item>
+    </string-array>
+    <string name="now_bar_text">Text</string>
+    <string-array name="now_bar_text_entries">
+        <item>One line</item>
+        <item>Two lines</item>
+        <item>Song only</item>
+    </string-array>
+    <string name="now_bar_text_size">Text size</string>
+    <string-array name="now_bar_two_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="now_bar_three_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="now_bar_four_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string name="now_bar_show_page">What shows in the bar</string>
+    <string name="now_bar_show_page_summary">Music and video, timers, calls and more</string>
+    <string name="now_bar_where">Where else</string>
+</resources>

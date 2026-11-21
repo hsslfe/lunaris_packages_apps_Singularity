@@ -18,11 +18,6 @@
     <string name="now_bar_scores">Live scores</string>
     <string name="now_bar_live_apps">Apps for Live Updates</string>
     <string name="now_bar_live_apps_all">All apps</string>
-    <string name="now_bar_pin">Pinned to the always-on display</string>
-    <string name="now_bar_pin_none">None. Tap to pick an app, or hold a Live Update in the bar</string>
-    <string name="now_bar_pin_change">Change</string>
-    <string name="now_bar_unpin_question">Unpin <xliff:g id="app" example="Uber">%1$s</xliff:g>?</string>
-    <string name="now_bar_unpin">Unpin</string>
     <string name="now_bar_scores_summary">Games you follow in At a Glance</string>
     <string name="now_bar_glance_settings">Google app settings</string>
     <string name="now_bar_glance_settings_summary">Where At a Glance and its Sports are set up, when the Google app offers them on this device</string>
@@ -32,7 +27,6 @@
     <string name="now_bar_buds">Earbuds and watches</string>
     <string name="now_bar_buds_summary">Battery of a connected device: left, right and case for earbuds</string>
     <string name="now_bar_wave">Wave animation</string>
-    <string name="now_bar_aod">Show on always-on display</string>
     <string name="now_bar_footer">Enable the lock-screen Now Bar independently from Dynamic Bar. Swipe left or right between enabled live activities and tap the bar for the matching controls. Use "What shows in the bar" to choose activities and where they appear. The original Lunaris Music Pill remains separately selectable.</string>
     <string name="now_bar_looks">Looks</string>
     <string-array name="now_bar_looks_entries">
@@ -126,5 +120,4 @@
     </string-array>
     <string name="now_bar_show_page">What shows in the bar</string>
     <string name="now_bar_show_page_summary">Music and video, timers, calls and more</string>
-    <string name="now_bar_where">Where else</string>
 </resources>

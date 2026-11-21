@@ -24,4 +24,10 @@ public class SystemSettingSeekBarPreference extends CustomSeekBarPreference {
         super(context, null);
         setPreferenceDataStore(new SystemSettingsStore(context.getContentResolver()));
     }
+
+    /** Set the adjustment step for an individual slider without changing other preferences. */
+    public void setInterval(int interval) {
+        mInterval = Math.max(1, interval);
+        notifyChanged();
+    }
 }

@@ -33,7 +33,7 @@
     <string name="now_bar_buds">Earbuds and watches</string>
     <string name="now_bar_buds_summary">Battery of a connected device: left, right and case for earbuds</string>
     <string name="now_bar_wave">Wave animation</string>
-    <string name="now_bar_footer">Enable the lock-screen Now Bar independently from Dynamic Bar. Swipe left or right between enabled live activities and tap the bar for the matching controls. Use "What shows in the bar" to choose which activities appear on the lock screen. The original Lunaris Music Pill remains separately selectable.</string>
+    <string name="now_bar_footer">Enable the lock-screen Now Bar independently from Dynamic Bar. Swipe left or right between enabled live activities and tap the bar for the matching controls. Use "What shows in the bar" to choose which activities appear on the lock screen.</string>
     <string name="now_bar_looks">Looks</string>
     <string-array name="now_bar_looks_entries">
         <item>Lunaris</item>

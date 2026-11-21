@@ -37,17 +37,17 @@ public class NowBarSettings extends SettingsPreferenceFragment {
 
     static final String[] KEYS = {MATERIAL, COLOR, OPACITY, OUTLINE, SHADOW, MORE, HEIGHT, WIDTH,
             CORNERS, RAISE, ART, BUTTONS, TEXT, TEXT_SIZE, WAVE};
-    private static final int[] DEFAULTS = {0, 0, 94, 1, 0, 0, 64, 1, 100, 0, 0, 0, 0, 13, 1};
+    private static final int[] DEFAULTS = {0, 0, 94, 1, 0, 0, 64, 180, 100, 0, 0, 0, 0, 13, 1};
 
     /** The looks row, in order: each is the defaults plus these key and value pairs. */
     private static final Object[][] LOOKS = {
         // Lunaris: native lock-screen music-pill proportions; every control below still works.
-        {MATERIAL, 1, COLOR, 1, OPACITY, 100, HEIGHT, 58, WIDTH, 1,
+        {MATERIAL, 1, COLOR, 1, OPACITY, 100, HEIGHT, 58, WIDTH, 180,
             OUTLINE, 1, SHADOW, 0, ART, 0, BUTTONS, 1, TEXT, 1, WAVE, 0},
         {},
         {MATERIAL, 1, OPACITY, 25, OUTLINE, 0},
-        {HEIGHT, 48, WIDTH, 0, BUTTONS, 1, WAVE, 0},
-        {HEIGHT, 88, WIDTH, 2, TEXT, 1, ART, 1, CORNERS, 50, TEXT_SIZE, 15},
+        {HEIGHT, 48, WIDTH, 130, BUTTONS, 1, WAVE, 0},
+        {HEIGHT, 88, WIDTH, 320, TEXT, 1, ART, 1, CORNERS, 50, TEXT_SIZE, 15},
         {COLOR, 2, OPACITY, 100, OUTLINE, 2, SHADOW, 2},
         {MATERIAL, 1, OPACITY, 35, HEIGHT, 76, CORNERS, 45, ART, 2, TEXT, 1, OUTLINE, 0, WAVE, 0},
     };
@@ -55,7 +55,23 @@ public class NowBarSettings extends SettingsPreferenceFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        migrateLegacyWidth();
         load();
+    }
+
+    /** Preserve existing Narrow / Between shortcuts / Full choices during migration. */
+    private void migrateLegacyWidth() {
+        final int oldWidth = Settings.System.getIntForUser(
+                getContentResolver(), WIDTH, -1, UserHandle.USER_CURRENT);
+        final int migrated;
+        switch (oldWidth) {
+            case 0: migrated = 130; break;
+            case 1: migrated = 180; break;
+            case 2: migrated = 320; break;
+            default: return;
+        }
+        Settings.System.putIntForUser(
+                getContentResolver(), WIDTH, migrated, UserHandle.USER_CURRENT);
     }
 
     private void load() {

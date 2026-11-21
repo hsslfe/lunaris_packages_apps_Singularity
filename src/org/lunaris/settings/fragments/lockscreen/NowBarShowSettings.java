@@ -35,10 +35,9 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-/** What the Now Bar shows, and where else it appears. */
+/** Controls which live activity types Now Bar shows on the lock screen. */
 public class NowBarShowSettings extends SettingsPreferenceFragment {
     private static final String KEY_LIVE_APPS = "now_bar_live_apps";
-    private static final String KEY_PIN = "now_bar_pin";
     private static final String KEY_GLANCE = "now_bar_glance_settings";
     /**
      * The Google app's settings, where At a Glance and its Sports live when the app offers them.
@@ -81,10 +80,6 @@ public class NowBarShowSettings extends SettingsPreferenceFragment {
             pickApps();
             return true;
         }
-        if (KEY_PIN.equals(preference.getKey())) {
-            if (pinned() == null) pickPin(); else unpin();
-            return true;
-        }
         if (KEY_GLANCE.equals(preference.getKey())) {
             try {
                 startActivity(GLANCE_SETTINGS);
@@ -110,11 +105,6 @@ public class NowBarShowSettings extends SettingsPreferenceFragment {
             apps.setSummary(names.isEmpty() ? getString(R.string.now_bar_live_apps_all)
                     : ListFormatter.getInstance().format(names));
         }
-        Preference pin = findPreference(KEY_PIN);
-        if (pin != null) {
-            String pinned = pinned();
-            pin.setSummary(pinned == null ? getString(R.string.now_bar_pin_none) : label(pinned));
-        }
     }
 
     private Set<String> liveApps() {
@@ -127,12 +117,6 @@ public class NowBarShowSettings extends SettingsPreferenceFragment {
             }
         }
         return apps;
-    }
-
-    private String pinned() {
-        String pkg = Settings.System.getStringForUser(getContentResolver(), KEY_PIN,
-                UserHandle.USER_CURRENT);
-        return TextUtils.isEmpty(pkg) ? null : pkg;
     }
 
     private CharSequence label(String pkg) {
@@ -148,24 +132,6 @@ public class NowBarShowSettings extends SettingsPreferenceFragment {
     /** All apps, then the apps picked, then the rest of the launchable apps. */
     private void pickApps() {
         loadApps(this::showApps);
-    }
-
-    /** Every launchable app; the one picked leads the bar and holds the always-on display. */
-    private void pickPin() {
-        loadApps(this::showPin);
-    }
-
-    private void showPin(String[] packages, CharSequence[] labels) {
-        if (!isAdded()) return;
-        new AlertDialog.Builder(getContext())
-                .setTitle(R.string.now_bar_pin)
-                .setItems(labels, (d, which) -> {
-                    Settings.System.putStringForUser(getContentResolver(), KEY_PIN,
-                            packages[which], UserHandle.USER_CURRENT);
-                    updateSummaries();
-                })
-                .setNegativeButton(android.R.string.cancel, null)
-                .show();
     }
 
     private void loadApps(java.util.function.BiConsumer<String[], CharSequence[]> then) {
@@ -262,18 +228,5 @@ public class NowBarShowSettings extends SettingsPreferenceFragment {
         updateSummaries();
     }
 
-    private void unpin() {
-        String pinned = pinned();
-        if (pinned == null) return;
-        new AlertDialog.Builder(getContext())
-                .setMessage(getString(R.string.now_bar_unpin_question, label(pinned)))
-                .setPositiveButton(R.string.now_bar_unpin, (d, w) -> {
-                    Settings.System.putStringForUser(getContentResolver(), KEY_PIN, "",
-                            UserHandle.USER_CURRENT);
-                    updateSummaries();
-                })
-                .setNeutralButton(R.string.now_bar_pin_change, (d, w) -> pickPin())
-                .setNegativeButton(android.R.string.cancel, null)
-                .show();
-    }
+
 }

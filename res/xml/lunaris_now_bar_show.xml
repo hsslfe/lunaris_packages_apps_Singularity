@@ -34,11 +34,6 @@
         android:title="@string/now_bar_live_apps"
         android:summary="@string/now_bar_live_apps_all"
         android:dependency="now_bar_live_updates" />
-    <Preference
-        android:key="now_bar_pin"
-        android:title="@string/now_bar_pin"
-        android:summary="@string/now_bar_pin_none"
-        android:dependency="now_bar_live_updates" />
     <lineageos.preference.SystemSettingSwitchPreference
         android:key="now_bar_scores"
         android:title="@string/now_bar_scores"
@@ -67,12 +62,4 @@
         android:summary="@string/now_bar_buds_summary"
         android:defaultValue="true" />
 
-    <PreferenceCategory
-        android:key="now_bar_where"
-        android:title="@string/now_bar_where">
-        <lineageos.preference.SystemSettingSwitchPreference
-            android:key="now_bar_aod"
-            android:title="@string/now_bar_aod"
-            android:defaultValue="true" />
-    </PreferenceCategory>
 </PreferenceScreen>

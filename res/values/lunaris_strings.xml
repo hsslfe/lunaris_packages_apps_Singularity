@@ -3195,4 +3195,10 @@
     <string name="heads_up_drop_origin_center">Top center</string>
     <string name="heads_up_drop_origin_right">Top right</string>
     <string name="heads_up_drop_origin_custom">Custom</string>
+    <string name="status_bar_battery_style_neon_ring">Neon ring</string>
+    <string name="neon_ring_color">Ring color</string>
+    <string name="neon_ring_color_level">By battery level</string>
+    <string name="neon_ring_color_accent">Accent</string>
+    <string name="neon_ring_color_status_bar">Match status bar icons</string>
+    <string name="neon_ring_charging_spark">Show spark while charging</string>
 </resources>

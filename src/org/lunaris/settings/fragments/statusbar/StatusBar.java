@@ -89,6 +89,10 @@ public class StatusBar extends SettingsPreferenceFragment implements
     private static final int PULLDOWN_DIR_LEFT = 2;
     private static final int PULLDOWN_DIR_ALWAYS = 3;
 
+    private static final int STYLE_NEON_RING = 5;
+    private static final String NEON_RING_ENABLED = "status_bar_battery_neon_ring";
+    private ListPreference mBatteryStyle;
+
     private static final int LOGO_STYLE_CUSTOM = 33;
     private static final int LOGO_CUSTOM_IMAGE_REQUEST = 3001;
 
@@ -112,6 +116,9 @@ public class StatusBar extends SettingsPreferenceFragment implements
         Context mContext = getActivity().getApplicationContext();
 
         final PreferenceScreen prefScreen = getPreferenceScreen();
+
+        mBatteryStyle = findPreference(LineageSettings.System.STATUS_BAR_BATTERY_STYLE);
+        mBatteryStyle.setOnPreferenceChangeListener(this);
 
         mStatusBarClock =
                 (LineageSystemSettingListPreference) findPreference(STATUS_BAR_CLOCK_STYLE);
@@ -187,6 +194,12 @@ public class StatusBar extends SettingsPreferenceFragment implements
     @Override
     public void onResume() {
         super.onResume();
+        final ContentResolver resolver = requireContext().getContentResolver();
+        final int style = Settings.System.getIntForUser(resolver, NEON_RING_ENABLED,
+                0, UserHandle.USER_CURRENT) != 0 ? STYLE_NEON_RING :
+                LineageSettings.System.getIntForUser(resolver,
+                        LineageSettings.System.STATUS_BAR_BATTERY_STYLE, 0, UserHandle.USER_CURRENT);
+        updateBatteryStyle(style);
         for (String key : new String[] { DYNAMIC_ISLAND, "network_speed_enabled" }) {
             SystemSettingPrimarySwitchPreference preference = findPreference(key);
             if (preference != null) {
@@ -203,9 +216,30 @@ public class StatusBar extends SettingsPreferenceFragment implements
         }
     }
 
+    private void updateBatteryStyle(int style) {
+        mBatteryStyle.setValue(String.valueOf(style));
+        mBatteryStyle.setSummary(mBatteryStyle.getEntry());
+        findPreference("status_bar_battery_ring_color").setVisible(style == STYLE_NEON_RING);
+        findPreference("status_bar_battery_ring_spark").setVisible(style == STYLE_NEON_RING);
+    }
+
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         ContentResolver resolver = getActivity().getContentResolver();
+        if (preference == mBatteryStyle) {
+            final int style = Integer.parseInt((String) newValue);
+            // The Lineage provider accepts only its standard style IDs.
+            if (style != STYLE_NEON_RING && !LineageSettings.System.putIntForUser(resolver,
+                    LineageSettings.System.STATUS_BAR_BATTERY_STYLE, style, UserHandle.USER_CURRENT)) {
+                return false;
+            }
+            if (!Settings.System.putIntForUser(resolver, NEON_RING_ENABLED,
+                    style == STYLE_NEON_RING ? 1 : 0, UserHandle.USER_CURRENT)) {
+                return false;
+            }
+            updateBatteryStyle(style);
+            return true;
+        }
         if (preference == mQuickPulldown) {
             int value = Integer.parseInt((String) newValue);
             updateQuickPulldownSummary(value);

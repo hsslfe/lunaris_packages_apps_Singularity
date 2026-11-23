@@ -217,7 +217,7 @@
         <item>@string/status_bar_battery_style_dotted_circle</item>
         <!--<item>@string/status_bar_battery_style_filled_circle</item>-->
         <item>@string/status_bar_battery_style_text</item>
-        <!--<item>@string/status_bar_battery_style_hidden</item>-->
+        <item>@string/status_bar_battery_style_neon_ring</item>
     </string-array>
 
     <string-array name="status_bar_battery_style_values" translatable="false">
@@ -227,8 +227,18 @@
         <item>1</item>
         <item>3</item>
         <item>2</item>
-        <!--<item>4</item>
-        <item>5</item>-->
+        <item>5</item>
+    </string-array>
+
+    <string-array name="neon_ring_color_entries" translatable="false">
+        <item>@string/neon_ring_color_level</item>
+        <item>@string/neon_ring_color_accent</item>
+        <item>@string/neon_ring_color_status_bar</item>
+    </string-array>
+    <string-array name="neon_ring_color_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
     </string-array>
 
     <string-array name="status_bar_battery_percent_entries" translatable="false">

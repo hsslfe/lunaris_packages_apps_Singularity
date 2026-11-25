@@ -3250,4 +3250,6 @@
     <string name="neon_ring_spark_always">Always show spark</string>
     <string name="neon_ring_spark_color">Spark color</string>
     <string name="neon_ring_custom_color">Custom ring color</string>
+    <string name="notification_expand_first_title">Expand first notification</string>
+    <string name="notification_expand_first_summary">Automatically expand the first eligible notification in the shade</string>
 </resources>

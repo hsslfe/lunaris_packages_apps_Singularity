@@ -50,6 +50,12 @@
             android:fragment="org.lunaris.settings.fragments.notifications.EssentialNotificationsSettings" />
 
         <org.lunaris.settings.preferences.SystemSettingSwitchPreference
+            android:key="notification_expand_first"
+            android:title="@string/notification_expand_first_title"
+            android:summary="@string/notification_expand_first_summary"
+            android:defaultValue="true" />
+
+        <org.lunaris.settings.preferences.SystemSettingSwitchPreference
             android:key="notification_sound_vib_screen_on"
             android:title="@string/notification_sound_vib_screen_on_title"
             android:summary="@string/notification_sound_vib_screen_on_summary"

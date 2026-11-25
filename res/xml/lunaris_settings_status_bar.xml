@@ -74,6 +74,14 @@
             android:defaultValue="false"
             android:fragment="org.lunaris.settings.fragments.statusbar.DynamicBar" />
 
+        <!-- Liquid Drop heads-up animation -->
+        <org.lunaris.settings.preferences.SecureSettingPrimarySwitchPreference
+            android:key="lunaris_heads_up_drop_enabled"
+            android:title="@string/heads_up_drop_title"
+            android:summary="@string/heads_up_drop_summary"
+            android:defaultValue="false"
+            android:fragment="org.lunaris.settings.fragments.statusbar.HeadsUpDropSettings" />
+
         <Preference
             android:key="statusbar_clock_chip"
             android:title="@string/statusbar_clock_chip_title"

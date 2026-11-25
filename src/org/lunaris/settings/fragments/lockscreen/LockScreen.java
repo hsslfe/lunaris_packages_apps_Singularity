@@ -18,8 +18,6 @@ package org.lunaris.settings.fragments.lockscreen;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.SystemProperties;
-import android.os.UserHandle;
-import android.provider.Settings;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
@@ -163,7 +161,9 @@ public class LockScreen extends SettingsPreferenceFragment
     @Override
     public void onResume() {
         super.onResume();
-        for (String key : new String[] { "ls_media_art_enabled", "nowplaying_enabled" }) {
+        // Keep the primary switch in sync with the Now Bar detail-page toggle.
+        for (String key : new String[] {
+                "now_bar", "ls_media_art_enabled", "nowplaying_enabled" }) {
             SystemSettingPrimarySwitchPreference preference = findPreference(key);
             if (preference != null) {
                 preference.loadValue();

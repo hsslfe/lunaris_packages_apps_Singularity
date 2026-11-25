@@ -92,6 +92,7 @@ public class StatusBar extends SettingsPreferenceFragment implements
     private static final int STYLE_NEON_RING = 5;
     private static final String NEON_RING_ENABLED = "status_bar_battery_neon_ring";
     private ListPreference mBatteryStyle;
+    private ListPreference mRingColorMode;
 
     private static final int LOGO_STYLE_CUSTOM = 33;
     private static final int LOGO_CUSTOM_IMAGE_REQUEST = 3001;
@@ -119,6 +120,8 @@ public class StatusBar extends SettingsPreferenceFragment implements
 
         mBatteryStyle = findPreference(LineageSettings.System.STATUS_BAR_BATTERY_STYLE);
         mBatteryStyle.setOnPreferenceChangeListener(this);
+        mRingColorMode = findPreference("status_bar_battery_ring_color");
+        mRingColorMode.setOnPreferenceChangeListener(this);
 
         mStatusBarClock =
                 (LineageSystemSettingListPreference) findPreference(STATUS_BAR_CLOCK_STYLE);
@@ -219,13 +222,22 @@ public class StatusBar extends SettingsPreferenceFragment implements
     private void updateBatteryStyle(int style) {
         mBatteryStyle.setValue(String.valueOf(style));
         mBatteryStyle.setSummary(mBatteryStyle.getEntry());
-        findPreference("status_bar_battery_ring_color").setVisible(style == STYLE_NEON_RING);
-        findPreference("status_bar_battery_ring_spark").setVisible(style == STYLE_NEON_RING);
+        boolean neon = style == STYLE_NEON_RING;
+        mRingColorMode.setVisible(neon);
+        findPreference("status_bar_battery_ring_spark").setVisible(neon);
+        findPreference("status_bar_battery_ring_spark_always").setVisible(neon);
+        findPreference("status_bar_battery_ring_spark_color").setVisible(neon);
+        findPreference("status_bar_battery_ring_custom_color").setVisible(
+                neon && "3".equals(mRingColorMode.getValue()));
     }
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         ContentResolver resolver = getActivity().getContentResolver();
+        if (preference == mRingColorMode) {
+            findPreference("status_bar_battery_ring_custom_color").setVisible("3".equals(newValue));
+            return true;
+        }
         if (preference == mBatteryStyle) {
             final int style = Integer.parseInt((String) newValue);
             // The Lineage provider accepts only its standard style IDs.

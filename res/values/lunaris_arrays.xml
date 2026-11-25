@@ -234,11 +234,13 @@
         <item>@string/neon_ring_color_level</item>
         <item>@string/neon_ring_color_accent</item>
         <item>@string/neon_ring_color_status_bar</item>
+        <item>@string/custom_color</item>
     </string-array>
     <string-array name="neon_ring_color_values" translatable="false">
         <item>0</item>
         <item>1</item>
         <item>2</item>
+        <item>3</item>
     </string-array>
 
     <string-array name="status_bar_battery_percent_entries" translatable="false">

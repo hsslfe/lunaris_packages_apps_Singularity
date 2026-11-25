@@ -3225,4 +3225,7 @@
     <string name="neon_ring_color_accent">Accent</string>
     <string name="neon_ring_color_status_bar">Match status bar icons</string>
     <string name="neon_ring_charging_spark">Show spark while charging</string>
+    <string name="neon_ring_spark_always">Always show spark</string>
+    <string name="neon_ring_spark_color">Spark color</string>
+    <string name="neon_ring_custom_color">Custom ring color</string>
 </resources>

@@ -234,6 +234,22 @@
             android:title="@string/neon_ring_charging_spark"
             android:defaultValue="true" />
 
+        <org.lunaris.settings.preferences.SystemSettingSwitchPreference
+            android:key="status_bar_battery_ring_spark_always"
+            android:title="@string/neon_ring_spark_always"
+            android:defaultValue="false" />
+
+        <org.lunaris.settings.preferences.colorpicker.SystemSettingColorPickerPreference
+            android:key="status_bar_battery_ring_spark_color"
+            android:title="@string/neon_ring_spark_color"
+            android:defaultValue="#00000000"
+            opaqueDialog="true" />
+
+        <org.lunaris.settings.preferences.colorpicker.SystemSettingColorPickerPreference
+            android:key="status_bar_battery_ring_custom_color"
+            android:title="@string/neon_ring_custom_color"
+            android:defaultValue="-1" />
+
         <lineageos.preference.LineageSystemSettingListPreference
             android:key="status_bar_show_battery_percent"
             android:title="@string/status_bar_battery_percent_title"

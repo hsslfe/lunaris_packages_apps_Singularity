@@ -18,6 +18,8 @@ package org.lunaris.settings.fragments.lockscreen;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.SystemProperties;
+import android.os.UserHandle;
+import android.provider.Settings;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
@@ -55,6 +57,8 @@ public class LockScreen extends SettingsPreferenceFragment
     private static final String LUNARIS_UDFPS_CUSTOM_CATEGORY = "lockscreen_custom_category";
     private static final String KEY_KEYGUARD_SCRIM = "keyguard_scrim_transparent";
     private static final String KEY_LOCK_SCREEN_NOTIFICATIONS = "lock_screen_notifications_settings";
+    private static final String KEY_NOW_BAR = "now_bar";
+    private static final String KEY_MUSIC_PILL = "ax_dynamic_bar_keyguard_music_pill";
 
     private static final String KEY_FP_SUCCESS = "fp_success_vibrate";
     private static final String KEY_FP_ERROR = "fp_error_vibrate";
@@ -69,6 +73,8 @@ public class LockScreen extends SettingsPreferenceFragment
     private SwitchPreferenceCompat mFpSuccessVib;
     private SwitchPreferenceCompat mFpErrorVib;
     private SwitchPreferenceCompat mKeyguardScrim;
+    private SwitchPreferenceCompat mMusicPill;
+    private SystemSettingPrimarySwitchPreference mNowBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -114,6 +120,15 @@ public class LockScreen extends SettingsPreferenceFragment
         mKeyguardScrim = (SwitchPreferenceCompat) findPreference(KEY_KEYGUARD_SCRIM);
         mKeyguardScrim.setOnPreferenceChangeListener(this);
 
+        mNowBar = findPreference(KEY_NOW_BAR);
+        if (mNowBar != null) {
+            mNowBar.setOnPreferenceChangeListener(this);
+        }
+        mMusicPill = findPreference(KEY_MUSIC_PILL);
+        if (mMusicPill != null) {
+            mMusicPill.setOnPreferenceChangeListener(this);
+        }
+
         updateWeatherSettings();
     }
 
@@ -127,7 +142,27 @@ public class LockScreen extends SettingsPreferenceFragment
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (preference == mSmartspace) {
+        if (preference == mNowBar) {
+            if (Boolean.TRUE.equals(newValue)) {
+                // Enabling Now Bar replaces the separate lockscreen music pill.
+                Settings.Secure.putIntForUser(getContentResolver(), KEY_MUSIC_PILL,
+                        0, UserHandle.USER_CURRENT);
+                if (mMusicPill != null) {
+                    mMusicPill.setChecked(false);
+                }
+            }
+            return true;
+        } else if (preference == mMusicPill) {
+            if (Boolean.TRUE.equals(newValue)) {
+                // Enabling the classic music pill disables Now Bar.
+                Settings.System.putIntForUser(getContentResolver(), KEY_NOW_BAR,
+                        0, UserHandle.USER_CURRENT);
+                if (mNowBar != null) {
+                    mNowBar.loadValue();
+                }
+            }
+            return true;
+        } else if (preference == mSmartspace) {
             mSmartspace.setChecked((Boolean)newValue);
             updateWeatherSettings();
             SystemUtils.showSystemUiRestartDialog(getContext());
@@ -161,9 +196,25 @@ public class LockScreen extends SettingsPreferenceFragment
     @Override
     public void onResume() {
         super.onResume();
-        // Keep the primary switch in sync with the Now Bar detail-page toggle.
+        if (mNowBar != null) {
+            mNowBar.loadValue();
+        }
+        if (mMusicPill != null) {
+            final boolean nowBarEnabled = Settings.System.getIntForUser(
+                    getContentResolver(), KEY_NOW_BAR, 0, UserHandle.USER_CURRENT) != 0;
+            boolean musicPillEnabled = Settings.Secure.getIntForUser(
+                    getContentResolver(), KEY_MUSIC_PILL, 0, UserHandle.USER_CURRENT) != 0;
+            if (nowBarEnabled && musicPillEnabled) {
+                // Resolve conflicting legacy states without enabling either feature.
+                Settings.Secure.putIntForUser(getContentResolver(), KEY_MUSIC_PILL,
+                        0, UserHandle.USER_CURRENT);
+                musicPillEnabled = false;
+            }
+            mMusicPill.setChecked(musicPillEnabled);
+        }
+        // Keep primary switches in sync after returning from detail pages.
         for (String key : new String[] {
-                "now_bar", "ls_media_art_enabled", "nowplaying_enabled" }) {
+                "ls_media_art_enabled", "nowplaying_enabled" }) {
             SystemSettingPrimarySwitchPreference preference = findPreference(key);
             if (preference != null) {
                 preference.loadValue();

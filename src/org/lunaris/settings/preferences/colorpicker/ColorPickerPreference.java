@@ -55,6 +55,7 @@ public class ColorPickerPreference extends Preference implements
     private String mCurrentHexValue;
     private float mDensity = 0;
     private boolean mAlphaSliderEnabled = false;
+    private boolean mOpaqueDialog;
     private boolean mShowReset;
     private boolean mShowPreview;
     private boolean mDividerAbove;
@@ -105,6 +106,7 @@ public class ColorPickerPreference extends Preference implements
     private void init(Context context, AttributeSet attrs) {
         mDensity = getContext().getResources().getDisplayMetrics().density;
         if (attrs != null) {
+            mOpaqueDialog = attrs.getAttributeBooleanValue(null, "opaqueDialog", false);
             mAlphaSliderEnabled = attrs.getAttributeBooleanValue(null, "alphaSlider", false);
             mDefaultValue = attrs.getAttributeIntValue(ANDROIDNS, "defaultValue", Color.BLACK);
             mShowReset = attrs.getAttributeBooleanValue(SETTINGS_NS, "showReset", true);
@@ -228,8 +230,8 @@ public class ColorPickerPreference extends Preference implements
         if (!isEnabled())
             return;
 
-        mDialog = new ColorPickerDialog(getContext(), mCurrentValue);
-        mDialog.setOnColorChangedListener(this);
+        mDialog = new ColorPickerDialog(getContext(), mOpaqueDialog ? mCurrentValue | 0xff000000 : mCurrentValue);
+        mDialog.setOnColorChangedListener(color -> onColorChanged(mOpaqueDialog ? color | 0xff000000 : color));
         if (mAlphaSliderEnabled) {
             mDialog.setAlphaSliderVisible(true);
         }

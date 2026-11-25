@@ -5,8 +5,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/singularity_text_primary</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:importantForAccessibility">no</item>
+        <item name="android:textFontWeight">500</item>
     </style>
     <style name="SingularityCardSummary">
         <item name="android:layout_width">match_parent</item>

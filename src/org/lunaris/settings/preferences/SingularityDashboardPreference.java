@@ -58,7 +58,7 @@ public class SingularityDashboardPreference extends Preference {
         addPreview(root, R.id.singularity_themes, R.layout.singularity_dashboard_theme_chips);
         addPreview(root, R.id.singularity_aod, R.layout.singularity_dashboard_aod_clock);
         root.findViewById(R.id.singularity_themes).setBackgroundResource(
-                R.drawable.singularity_accent_background);
+                R.drawable.singularity_card_background);
         root.findViewById(R.id.singularity_aod).setBackgroundResource(
                 R.drawable.singularity_card_background);
         root.findViewById(R.id.singularity_sound).setBackgroundResource(
@@ -99,8 +99,6 @@ public class SingularityDashboardPreference extends Preference {
                 R.drawable.ic_singularity_navigation, "navigation");
         bind(root, R.id.singularity_misc, R.string.singularity_miscellaneous, 0,
                 R.drawable.ic_singularity_misc, "miscellaneous");
-        bind(root, R.id.singularity_team, R.string.singularity_team, 0,
-                R.drawable.ic_singularity_team, "team");
         bind(root, R.id.singularity_sound, R.string.sound_title, R.string.sound_summary,
                 R.drawable.ic_singularity_sound, "sound");
 

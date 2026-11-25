@@ -22,17 +22,17 @@
         android:key="lockscreen_interface_category"
         android:title="@string/lockscreen_interface_category">
 
-        <org.lunaris.settings.preferences.SystemSettingSwitchPreference
-            android:key="lockscreen_dark_status_bar"
-            android:title="@string/lockscreen_dark_status_bar_title"
-            android:summary="@string/lockscreen_dark_status_bar_summary"
-            android:defaultValue="false" />
-
         <Preference
             android:key="lock_screen_notifications_settings"
             android:title="@string/lock_screen_notifs_title"
             android:summary="@string/lock_screen_notifications_settings_summary"
             android:fragment="com.android.settings.notification.LockScreenNotificationsPreferencePageFragment" />
+
+        <org.lunaris.settings.preferences.SystemSettingSwitchPreference
+            android:key="lockscreen_dark_status_bar"
+            android:title="@string/lockscreen_dark_status_bar_title"
+            android:summary="@string/lockscreen_dark_status_bar_summary"
+            android:defaultValue="false" />
 
         <org.lunaris.settings.preferences.SystemSettingSwitchPreference
             android:key="lockscreen_wallpaper_zoom_enabled"
@@ -88,6 +88,14 @@
             android:title="@string/dynamic_bar_keyguard_music_pill"
             android:summary="@string/dynamic_bar_keyguard_music_pill_summary"
             android:defaultValue="false" />
+
+        <!-- Same primary-switch row as Pulse and Now Playing; toggles System.now_bar. -->
+        <org.lunaris.settings.preferences.SystemSettingPrimarySwitchPreference
+            android:key="now_bar"
+            android:title="@string/now_bar_title"
+            android:summary="@string/now_bar_summary"
+            android:defaultValue="false"
+            android:fragment="org.lunaris.settings.fragments.lockscreen.NowBarSettings" />
 
         <!-- Pulse music visualizer -->
         <org.lunaris.settings.preferences.SecureSettingPrimarySwitchPreference

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: The Resurrected Remix Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/now_bar_show_page">
+
+    <lineageos.preference.SystemSettingSwitchPreference
+        android:key="now_bar_music"
+        android:title="@string/now_bar_music"
+        android:defaultValue="true" />
+    <lineageos.preference.SystemSettingSwitchPreference
+        android:key="now_bar_timers"
+        android:title="@string/now_bar_timers"
+        android:defaultValue="true" />
+    <lineageos.preference.SystemSettingSwitchPreference
+        android:key="now_bar_calls"
+        android:title="@string/now_bar_calls"
+        android:defaultValue="true" />
+    <lineageos.preference.SystemSettingSwitchPreference
+        android:key="now_bar_hide_call"
+        android:title="@string/now_bar_hide_call"
+        android:summary="@string/now_bar_hide_call_summary"
+        android:defaultValue="true"
+        android:dependency="now_bar_calls" />
+    <lineageos.preference.SystemSettingSwitchPreference
+        android:key="now_bar_live_updates"
+        android:title="@string/now_bar_live"
+        android:summary="@string/now_bar_live_summary"
+        android:defaultValue="true" />
+    <Preference
+        android:key="now_bar_live_apps"
+        android:title="@string/now_bar_live_apps"
+        android:summary="@string/now_bar_live_apps_all"
+        android:dependency="now_bar_live_updates" />
+    <lineageos.preference.SystemSettingSwitchPreference
+        android:key="now_bar_scores"
+        android:title="@string/now_bar_scores"
+        android:summary="@string/now_bar_scores_summary"
+        android:defaultValue="true" />
+    <Preference
+        android:key="now_bar_glance_settings"
+        android:title="@string/now_bar_glance_settings"
+        android:summary="@string/now_bar_glance_settings_summary"
+        android:dependency="now_bar_scores" />
+    <lineageos.preference.SystemSettingSwitchPreference
+        android:key="now_bar_recording"
+        android:title="@string/now_bar_recording"
+        android:defaultValue="true" />
+    <lineageos.preference.SystemSettingSwitchPreference
+        android:key="now_bar_charging"
+        android:title="@string/now_bar_charging"
+        android:defaultValue="false" />
+    <org.lunaris.settings.preferences.NowBarChipsPreference
+        android:key="now_bar_battery_mode"
+        android:title="@string/now_bar_battery_mode"
+        android:summary="@string/now_bar_battery_mode_summary"
+        android:entries="@array/now_bar_battery_mode_entries"
+        android:entryValues="@array/now_bar_two_values"
+        android:defaultValue="0"
+        android:dependency="now_bar_charging" />
+    <lineageos.preference.SystemSettingSwitchPreference
+        android:key="now_bar_flashlight"
+        android:title="@string/now_bar_flashlight"
+        android:defaultValue="false" />
+    <lineageos.preference.SystemSettingSwitchPreference
+        android:key="now_bar_hotspot"
+        android:title="@string/now_bar_hotspot"
+        android:summary="@string/now_bar_hotspot_summary"
+        android:defaultValue="false" />
+    <lineageos.preference.SystemSettingSwitchPreference
+        android:key="now_bar_buds"
+        android:title="@string/now_bar_buds"
+        android:summary="@string/now_bar_buds_summary"
+        android:defaultValue="true" />
+
+</PreferenceScreen>

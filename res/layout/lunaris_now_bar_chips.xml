@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dedicated Now Bar chip row: consistent heading typography/position with the
+     seekbar preferences and sufficient vertical space for wrapped selections. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+    android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+    android:paddingTop="12dp"
+    android:paddingBottom="30dp">
+
+    <TextView
+        android:id="@+id/now_bar_preference_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:includeFontPadding="true"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/luna_text_color_primary" />
+
+    <TextView
+        android:id="@+id/now_bar_preference_summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:includeFontPadding="true"
+        android:textSize="14sp"
+        android:textColor="@color/luna_text_color_secondary"
+        android:visibility="gone" />
+
+    <org.lunaris.settings.preferences.NowBarFlowLayout
+        android:id="@+id/now_bar_chips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="4dp" />
+</LinearLayout>

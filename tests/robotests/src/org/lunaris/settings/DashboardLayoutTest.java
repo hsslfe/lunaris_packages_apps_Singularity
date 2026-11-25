@@ -62,6 +62,27 @@ public class DashboardLayoutTest {
                         for (int[] shortcut : SHORTCUTS) {
                             assertShortcutBounds(root.findViewById(shortcut[0]));
                         }
+                        ViewGroup grid = root.findViewById(R.id.singularity_tile_grid);
+                        assertEquals(6, grid.getChildCount());
+                        int tileHeight = grid.getChildAt(0).getHeight();
+                        int minWidth = Integer.MAX_VALUE;
+                        int maxWidth = 0;
+                        for (int index = 0; index < 6; index++) {
+                            View tile = grid.getChildAt(index);
+                            assertEquals("All six cards must have the same height",
+                                    tileHeight, tile.getHeight());
+                            minWidth = Math.min(minWidth, tile.getWidth());
+                            maxWidth = Math.max(maxWidth, tile.getWidth());
+                            assertEquals(grid.getChildAt(index < 3 ? 0 : 3).getTop(),
+                                    tile.getTop());
+                        }
+                        assertTrue("Tile widths differ", maxWidth - minWidth <= 1);
+                        assertTrue("Rows overlap", grid.getChildAt(3).getTop()
+                                > grid.getChildAt(0).getBottom());
+                        assertEquals("Grid direction for " + width + "dp, rtl=" + rtl
+                                + ", resolved=" + grid.getLayoutDirection(),
+                                rtl, grid.getChildAt(0).getLeft()
+                                > grid.getChildAt(2).getLeft());
                     }
                 }
             }

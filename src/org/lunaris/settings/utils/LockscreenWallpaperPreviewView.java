@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import com.android.settings.R;
 
 import java.io.IOException;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -67,6 +68,7 @@ public class LockscreenWallpaperPreviewView extends ImageView {
         float radius = getResources().getDimension(R.dimen.singularity_card_radius);
         mClipPath.reset();
         mClipPath.addRoundRect(0, 0, width, height, radius, radius, Path.Direction.CW);
+        refreshWallpaper();
     }
 
     @Override
@@ -95,17 +97,31 @@ public class LockscreenWallpaperPreviewView extends ImageView {
     }
 
     private void refreshWallpaper() {
-        if (mExecutor == null || mExecutor.isShutdown()) {
+        if (mExecutor == null || mExecutor.isShutdown() || getWidth() == 0 || getHeight() == 0) {
             return;
         }
+        final int width = getWidth();
+        final int height = getHeight();
+        final float density = getResources().getDisplayMetrics().density;
         final int generation = ++mGeneration;
         if (mLoad != null) {
             mLoad.cancel(true);
         }
         mLoad = mExecutor.submit(() -> {
-            Drawable preview = loadWallpaper(WallpaperManager.FLAG_LOCK);
-            if (preview == null) {
-                preview = loadWallpaper(WallpaperManager.FLAG_SYSTEM);
+            Drawable preview = null;
+            try {
+                Drawable source = loadWallpaper(WallpaperManager.FLAG_LOCK);
+                if (source == null) {
+                    source = loadWallpaper(WallpaperManager.FLAG_SYSTEM);
+                }
+                if (source != null) {
+                    preview = new BitmapDrawable(getResources(),
+                            WallpaperPreviewBlur.create(source, width, height, density));
+                }
+            } catch (CancellationException e) {
+                return;
+            } catch (RuntimeException e) {
+                Log.w(TAG, "Could not prepare blurred wallpaper preview", e);
             }
             final Drawable result = preview;
             mHandler.post(() -> {

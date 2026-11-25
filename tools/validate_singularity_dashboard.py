@@ -76,8 +76,10 @@ class DashboardSourceChecks(unittest.TestCase):
     def test_day_and_night_palettes_are_complete_and_readable(self):
         day, night = colors('values'), colors('values-night')
         self.assertEqual(day.keys(), night.keys())
-        self.assertGreater(luminance(day['singularity_background']), 0.9)
-        self.assertLess(luminance(night['singularity_background']), 0.01)
+        for name in ('singularity_background', 'singularity_card_start',
+                     'singularity_card_center', 'singularity_card_end'):
+            self.assertEqual('#FFFFFF', day[name], name)
+            self.assertEqual('#000000', night[name], name)
         for palette in (day, night):
             for text in ('singularity_text_primary', 'singularity_text_secondary'):
                 for background in ('singularity_background', 'singularity_card_start',
@@ -88,6 +90,20 @@ class DashboardSourceChecks(unittest.TestCase):
         for item in styles.iter('item'):
             if item.get('name') == 'android:textColor':
                 self.assertTrue(item.text.startswith('@color/singularity_'))
+
+    def test_weighted_shortcut_rows_measure_their_own_height(self):
+        layout = inflate_layout('preference_singularity_dashboard')
+        rows = [e for e in layout.iter() if e.get(ANDROID + 'orientation') == 'horizontal'
+                and any(c.get(ANDROID + 'layout_weight') == '1' for c in e)]
+        shortcut_rows = [e for e in rows if e.get(ANDROID + 'baselineAligned') == 'false']
+        self.assertEqual(3, len(shortcut_rows))
+        for row in shortcut_rows:
+            for card in row:
+                if card.get(ANDROID + 'layout_weight') == '1':
+                    # A MATCH_PARENT child in an unconstrained, WRAP_CONTENT
+                    # horizontal row can be forced to zero height by LinearLayout.
+                    self.assertEqual('wrap_content', card.get(ANDROID + 'layout_height'))
+                    self.assertGreaterEqual(int(card.get(ANDROID + 'minHeight')[:-2]), 48)
 
     def test_new_resource_references_resolve(self):
         resources = {}

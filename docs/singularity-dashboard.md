@@ -1,12 +1,20 @@
 # Singularity dashboard
 
-The dashboard replaces the top-level list with the supplied card layout: a live lockscreen clock and blurred wallpaper, Monet palette, wallpapers, theme/font shortcuts, status bar and QS shortcuts, AOD preview, and the six shortcut tiles. Sound remains accessible below the grid. The Theme Packs row opens the existing User Interface settings; its two buttons open the theme store and fonts. Team opens the Lunaris AOSP GitHub organization.
+The page uses the same Material colour roles as the Settings homepage: `surfaceContainer` for the page, `surfaceBright` for filled cards, `onSurface` / `onSurfaceVariant` for text, and the primary colour at 50% opacity for circular icon wells. Android's matching `system_*_light` and `system_*_dark` resources follow the active system palette in both themes. Cards have 24dp corners without the previous outlines or blue gradients. Labels inherit the Settings font family.
 
-The dashboard follows Android's day/night configuration. Light mode uses pure white page/card surfaces with dark text and icons. Night mode uses pure black page/card surfaces. Icon wells and borders use neutral greys rather than wallpaper-tinted colours. Text and icons in the lockscreen card use a matching wallpaper scrim to remain readable. The wallpaper image alone receives `RenderEffect` blur; neither the clock nor the device's actual wallpaper is modified.
+The page scrolls naturally to keep controls and larger text readable. The layout contains a compact lockscreen wallpaper card, Monet and wallpaper rows, theme/font shortcuts, Statusbar and QS cards, AOD, three action tiles, a Navigation/Miscellaneous pair, and one full-width Sound card. Team has been removed. Theme Packs opens the existing User Interface settings; its buttons open the existing theme store and font picker.
+
+## Wallpaper preview
+
+The lockscreen card starts at 88dp and can grow for larger text. The wallpaper is a backdrop: its intrinsic image dimensions do not participate in the card's height calculation. `LockscreenWallpaperPreviewView` reports zero background height during the initial unconstrained measurement, then fills the content-sized card during FrameLayout's exact measurement pass. This prevents a tall wallpaper from stretching the card.
+
+No blur or wallpaper effect is applied. A black layer with alpha `0.3` dims the preview by 30% in both themes. The clock and title remain sharp, with white text and a small shadow. The device's wallpaper is never modified.
+
+Decoding runs off the main thread, samples static images to at most 2048 pixels per dimension, and closes the file descriptor. The loader reads the separate lockscreen image first, then falls back to the home wallpaper when they are shared. Live wallpapers use provider thumbnails. If wallpaper access is unavailable, the filled card remains visible. Attachment, window visibility and wallpaper colour changes refresh the image. Detaching unregisters listeners, cancels work and clears stale results.
 
 ## Integration
 
-This repository is a source overlay for `packages/apps/Settings/Singularity`. It has no standalone APK build configuration. The existing Settings `Android.bp` includes `Singularity/src/**/*.java`, `Singularity/src/**/*.kt` and `Singularity/res`, so the new files require no build-file changes. Build the platform-signed Settings app in the matching Lunaris Android 16 tree:
+This repository is a source overlay for `packages/apps/Settings/Singularity`. The existing Settings build includes its sources and resources. Build the platform-signed app in the matching Lunaris Android 16 tree:
 
 ```sh
 source build/envsetup.sh
@@ -14,36 +22,24 @@ lunch <your-device-target>
 m Settings
 ```
 
-The dashboard uses the standard AndroidX preference adapter for this page. Settings' grouped preference adapter would repaint the entire dashboard as one rounded, tinted group after the dashboard binds. Other Settings screens keep their existing adapters.
+The original eight preference keys and destinations remain for navigation and search. Only their runtime presentation is replaced. The dashboard uses a plain AndroidX preference adapter so the Settings grouped adapter does not repaint the whole page as one rounded group. Other pages retain their existing adapters. App navigation preserves Settings dispatch, metrics and haptics; missing external activities are handled without crashing.
 
-The original eight preference keys and fragment destinations remain in the preference screen for navigation and search. They are hidden only in the dashboard's runtime presentation. App navigation uses the existing Settings preference dispatch, including metrics and haptics. Missing external activities show an unavailable message instead of crashing.
+The platform Settings manifest already declares the wallpaper read permissions used by the loader. No permission, service, or wallpaper-setting action is added.
 
-Wallpaper decoding runs on a single worker, samples static images to at most 768 pixels per dimension, and closes the wallpaper file. It first reads the separate lockscreen wallpaper, then the system wallpaper when no separate image exists. Live wallpapers use their provider thumbnail. When access is denied or an image cannot be decoded, the themed card background is displayed. Loading refreshes on attachment, window visibility and wallpaper colour changes. Detaching cancels work, unregisters the listener and clears the image; stale results cannot overwrite a new attachment.
-
-The platform Settings app already declares `MANAGE_EXTERNAL_STORAGE` and `READ_MEDIA_IMAGES`, which the Android wallpaper service accepts for wallpaper reads. No additional permission or service is introduced here. Monet and theme/font shortcuts target the same packages already used by User Interface settings.
-
-At widths below 360dp or font scales above 1.3, the trailing swatches, theme/font buttons and AOD clock are hidden to leave room for labels. Their settings remain accessible through Monet, Theme Packs and AOD. Shortcut cards use `wrap_content` height within their weighted horizontal rows. Using `match_parent` here made Android measure the rows at 1px under RecyclerView's unconstrained height, causing missing labels and overlapping icons. Cards can grow vertically, use start/end positioning, and retain the host list's system-bar padding.
+Trailing colour swatches, theme/font buttons and the AOD clock are hidden below 360dp or above 1.3 font scale to leave room for labels. Those settings remain available through their parent cards. Weighted shortcut rows use `wrap_content` height to avoid collapsing under RecyclerView's unconstrained measurement. The page retains system-bar padding.
 
 ## Validation
 
-Run the source regression checks from this repository:
+Run source checks from the repository:
 
 ```sh
 python3 tools/validate_singularity_dashboard.py
 ```
 
-The source checks also prevent pure black/white surfaces from becoming tinted and prevent weighted shortcut cards from returning to `match_parent` height. The checks cover preservation of the original destinations, dashboard binding IDs, new resource references, day/night palette completeness and text contrast, and placement of the wallpaper layer separately from the clock.
+They cover original destinations, card IDs, resource references, homepage colour-role aliases, filled surfaces, weighted row sizing, the 30% dim layer, and the single Sound card replacing Team.
 
-During implementation, all new resources plus the updated preference screen were compiled and linked using AAPT2 36.0.0 and the Android API 36 framework. All three changed/new Java classes compiled against API 36 and AndroidX libraries. The focused harness supplies stubs for ROM-specific Settings classes and metrics; it is not a complete Settings build.
+The API 36 Robolectric fixture in `tests/robotests/src/org/lunaris/settings/DashboardLayoutTest.java` measures the compiled XML at 320/360/393/600dp, in both themes, at 1.0/1.3/2.0 font scales, and in LTR/RTL. Additional regressions load a tall bitmap, check that it cannot enlarge the lockscreen card, verify the image fills the card, and render a white wallpaper to check the 30% dim. Run it in a host with API 36 Robolectric and the Settings resource APK; this overlay does not define a standalone test module.
 
-The Android API 36 Robolectric fixture in `tests/robotests/src/org/lunaris/settings/DashboardLayoutTest.java` inflates the compiled dashboard XML and measures it with the same unconstrained height as a scrolling RecyclerView. It covers 320/360/393/600dp widths, both themes, 1.0/1.3/2.0 font scales and LTR/RTL: 48 configurations. It checks card height, label bounds, text overflow and exact black/white page colours. Run it in an API 36 Robolectric host with the Settings resource APK; this source overlay does not define a standalone test module.
+The focused local harness compiles resources with AAPT2 / API 36 and Java against AndroidX, with stubs for missing ROM-specific Settings classes. Native Android layout renders are inspected in both themes. It is not a complete ROM build or device test.
 
-The focused harness reproduced the old Statusbar card at 1px high. With the fix, the normal-size Statusbar and shortcut cards measure 60dp and 82dp respectively. Android native-graphics renders were inspected in both themes. These are layout fixtures; they do not exercise the full Settings activity or load a device wallpaper.
-
-A full ROM tree and an Android device/emulator were unavailable, so full on-device integration is still unverified. Before merging:
-
-- Build Settings in the matching ROM tree and open every dashboard shortcut.
-- Compare light and dark modes, including switching themes while the dashboard is open.
-- Set distinct home and lockscreen images, change them while Settings is in the background, then test a shared wallpaper and live wallpaper.
-- Check 12/24-hour time, rotation, 320dp width, larger fonts, RTL, TalkBack, and gesture/three-button navigation.
-- Navigate back and reopen the page to check toolbar restoration, wallpaper refresh and scroll position.
+After building, verify navigation, theme switching, distinct/shared/live wallpapers, wallpaper changes while Settings is in the background, 12/24-hour time, larger fonts, RTL, TalkBack, system-bar spacing and back navigation on the device.

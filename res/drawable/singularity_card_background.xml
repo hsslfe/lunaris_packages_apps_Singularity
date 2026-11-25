@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="#307CAEFF">
+    android:color="?android:attr/colorControlHighlight">
     <item>
-        <shape android:shape="rectangle">
-            <corners android:radius="20dp" />
-            <gradient
-                android:angle="315"
-                android:startColor="@color/singularity_card_start"
-                android:centerColor="@color/singularity_card_center"
-                android:endColor="@color/singularity_card_end" />
-            <stroke
-                android:width="1dp"
-                android:color="@color/singularity_card_stroke" />
+        <shape>
+            <corners android:radius="@dimen/singularity_card_radius" />
+            <solid android:color="@color/singularity_card" />
         </shape>
     </item>
 </ripple>

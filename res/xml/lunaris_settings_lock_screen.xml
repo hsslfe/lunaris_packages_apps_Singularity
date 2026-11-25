@@ -70,6 +70,12 @@
             android:defaultValue="false"
             android:fragment="org.lunaris.settings.fragments.lockscreen.MediaArtSettings" />
 
+        <org.lunaris.settings.preferences.SecureSettingSwitchPreference
+            android:key="ax_dynamic_bar_keyguard_music_pill"
+            android:title="@string/dynamic_bar_keyguard_music_pill"
+            android:summary="@string/dynamic_bar_keyguard_music_pill_summary"
+            android:defaultValue="false" />
+
         <!-- Same primary-switch row as Pulse and Now Playing; toggles System.now_bar. -->
         <org.lunaris.settings.preferences.SystemSettingPrimarySwitchPreference
             android:key="now_bar"

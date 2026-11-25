@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:importantForAccessibility="noHideDescendants">
+    <View
+        android:id="@+id/singularity_swatch_one"
+        android:layout_width="26dp"
+        android:layout_height="26dp" />
+    <View
+        android:id="@+id/singularity_swatch_two"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="-5dp" />
+    <View
+        android:id="@+id/singularity_swatch_three"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="-5dp" />
+    <View
+        android:id="@+id/singularity_swatch_four"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="-5dp" />
+</LinearLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="singularity_subtitle">Personalize your device experience</string>
+    <string name="singularity_back">Back</string>
+    <string name="singularity_lockscreen">Lockscreen</string>
+    <string name="singularity_monet">Monet Color</string>
+    <string name="singularity_monet_summary">System color palette</string>
+    <string name="singularity_wallpapers">Wallpapers</string>
+    <string name="singularity_wallpapers_summary">Apply and manage wallpapers</string>
+    <string name="singularity_theme_packs">Theme Packs</string>
+    <string name="singularity_theme_packs_summary">Presets for a unified look</string>
+    <string name="singularity_statusbar">Statusbar</string>
+    <string name="singularity_qs">QS Panel</string>
+    <string name="singularity_aod">AOD Customizations</string>
+    <string name="singularity_aod_summary">Customize Always-on Display</string>
+    <string name="singularity_power">Powermenu</string>
+    <string name="singularity_notifications">Notification</string>
+    <string name="singularity_miscellaneous">Miscellaneous</string>
+    <string name="singularity_team">Team</string>
+    <string name="singularity_option_unavailable">This option is unavailable on this device.</string>
+    <string
+        name="singularity_font_preview"
+        translatable="false">Aa</string>
+</resources>

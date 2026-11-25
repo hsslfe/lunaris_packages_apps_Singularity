@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: MistOS
+     SPDX-FileCopyrightText: 2026 Lunaris AOSP
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="switch_icon_title">Switch icon</string>
+    <string name="switch_icon_choose_title">Choose an icon</string>
+    <string name="switch_icon_default">Default</string>
+    <string name="switch_icon_custom">Custom</string>
+    <string name="switch_icon_bat">Bat</string>
+    <string name="switch_icon_shield">Shield</string>
+    <string name="switch_icon_pokeball">Poké Ball</string>
+    <string name="switch_icon_spider">Spider</string>
+    <string name="switch_icon_sharingan">Sharingan</string>
+    <string name="switch_icon_preview_off">Off</string>
+    <string name="switch_icon_preview_on">On</string>
+    <string name="switch_icon_preview_before">Before</string>
+    <string name="switch_icon_preview_after">After · <xliff:g id="icon_name">%1$s</xliff:g></string>
+    <string name="switch_icon_upload">Upload your own icon</string>
+    <string name="switch_icon_hint">The icon only shows while a switch is on. Off switches always keep the default icon. Changes apply to Settings switches right away and are kept after a reboot</string>
+    <string name="switch_icon_custom_set">Custom icon applied</string>
+    <string name="switch_icon_failed">Couldn\'t apply that icon. Try another one</string>
+    <string name="switch_icon_needs_gallery">Install or enable an app that can choose images</string>
+    <string name="switch_icon_crop_hint">Move or resize the frame to crop your switch icon</string>
+    <string name="switch_icon_crop_free">Free</string>
+    <string name="switch_icon_crop_square">Square</string>
+    <string name="switch_icon_crop_wide">Wide</string>
+    <string name="switch_icon_crop_tall">Tall</string>
+    <string name="switch_icon_crop_apply">Apply</string>
+    <string name="switch_icon_crop_saving">Saving…</string>
+</resources>

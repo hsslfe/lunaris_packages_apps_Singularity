@@ -167,6 +167,7 @@ class DynamicBar : SettingsPreferenceFragment() {
 
     companion object {
         private const val SETTINGS_KEY_ENABLED = "ax_dynamic_bar_enabled"
+        private const val SETTINGS_KEY_STATUS_BAR_ENABLED = "ax_dynamic_bar_status_bar_enabled"
         private const val SETTINGS_KEY_KEYGUARD_ENABLED = "ax_dynamic_bar_keyguard_enabled"
         private const val SETTINGS_KEY_EVENTS = "ax_dynamic_bar_events"
         private const val SETTINGS_KEY_COMPACT_NOTIFICATIONS = "ax_dynamic_bar_compact_notifications"
@@ -177,6 +178,10 @@ class DynamicBar : SettingsPreferenceFragment() {
             val resolver = context.contentResolver
             Settings.Secure.putIntForUser(
                 resolver, SETTINGS_KEY_ENABLED, 0,
+                UserHandle.USER_CURRENT
+            )
+            Settings.Secure.putIntForUser(
+                resolver, SETTINGS_KEY_STATUS_BAR_ENABLED, 1,
                 UserHandle.USER_CURRENT
             )
             Settings.Secure.putIntForUser(

@@ -60,10 +60,14 @@ class DashboardSourceChecks(unittest.TestCase):
         ids = {e.get(ANDROID + 'id', '').split('/')[-1]: e for e in layout.iter()}
         cards = re.findall(r'bind\(root, R.id.(\w+),', PREFERENCE.read_text())
         self.assertEqual(12, len(cards))
+        styled = {'singularity_monet', 'singularity_wallpapers', 'singularity_themes',
+                  'singularity_statusbar', 'singularity_qs', 'singularity_aod'}
         for card in cards:
             children = {e.get(ANDROID + 'id', '').split('/')[-1]: e for e in ids[card].iter()}
             self.assertEqual('TextView', children['singularity_card_title'].tag)
-            self.assertEqual('ImageView', children['singularity_card_icon'].tag)
+            expected = ('org.lunaris.settings.widget.HomepageStyledIconView'
+                        if card in styled else 'ImageView')
+            self.assertEqual(expected, children['singularity_card_icon'].tag)
         for card in ('singularity_monet', 'singularity_themes', 'singularity_aod'):
             self.assertTrue(any(e.get(ANDROID + 'id') == '@+id/singularity_card_trailing'
                                 for e in ids[card].iter()))

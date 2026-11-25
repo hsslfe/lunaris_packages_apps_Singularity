@@ -10,7 +10,7 @@
     android:background="?android:attr/selectableItemBackground"
     android:focusable="true"
     android:clickable="true">
-    <ImageView
+    <org.lunaris.settings.widget.HomepageStyledIconView
         android:id="@+id/singularity_card_icon"
         style="@style/SingularityCardIcon" />
     <LinearLayout

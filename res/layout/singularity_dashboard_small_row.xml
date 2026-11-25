@@ -10,7 +10,7 @@
     android:focusable="true"
     android:clickable="true"
     android:background="@drawable/singularity_card_background">
-    <ImageView
+    <org.lunaris.settings.widget.HomepageStyledIconView
         android:id="@+id/singularity_card_icon"
         style="@style/SingularityCardIcon"
         android:layout_width="34dp"

@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.preference.Preference;
+import androidx.preference.PreferenceGroupAdapter;
+import androidx.preference.PreferenceScreen;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
@@ -36,6 +38,14 @@ public class LunarisSettings extends DashboardFragment {
     private boolean mRestoreActionBar;
 
     @Override
+    protected RecyclerView.Adapter onCreateAdapter(PreferenceScreen preferenceScreen) {
+        // This preference is a complete page, with its own cards and spacing.
+        // The Settings adapter decorates it as one rounded preference group
+        // and replaces its background after onBindViewHolder returns.
+        return new PreferenceGroupAdapter(preferenceScreen);
+    }
+
+    @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         super.onCreatePreferences(savedInstanceState, rootKey);
         // Keep real preferences for Settings navigation, metrics and search indexing.
@@ -55,6 +65,7 @@ public class LunarisSettings extends DashboardFragment {
         super.onViewCreated(view, savedInstanceState);
         view.setBackgroundColor(getContext().getColor(R.color.singularity_background));
         RecyclerView list = getListView();
+        list.setBackgroundColor(getContext().getColor(R.color.singularity_background));
         list.setPadding(0, list.getPaddingTop(), 0, list.getPaddingBottom());
         setDivider(null);
         // The dashboard supplies its own compact header. Restore the host chrome

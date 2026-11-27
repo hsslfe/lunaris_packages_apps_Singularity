@@ -125,4 +125,6 @@
     <string name="now_bar_show_page_summary">Music and video, timers, calls and more</string>
     <string name="now_bar_notifications">Notifications</string>
     <string name="now_bar_notifications_summary">Show notifications in the Now Bar on the lock screen</string>
+    <string name="now_bar_coloros_swipe_up">Swipe up for ColorOS reveal</string>
+    <string name="now_bar_coloros_swipe_up_summary">When ColorOS style is enabled, swipe up to reveal notifications and tap for activity controls. Turn off to use the original tap-to-reveal behavior.</string>
 </resources>

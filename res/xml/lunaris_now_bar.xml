@@ -13,6 +13,13 @@
         android:summary="@string/now_bar_summary"
         android:defaultValue="false" />
 
+    <lineageos.preference.SystemSettingSwitchPreference
+        android:key="now_bar_coloros_swipe_up"
+        android:title="@string/now_bar_coloros_swipe_up"
+        android:summary="@string/now_bar_coloros_swipe_up_summary"
+        android:defaultValue="true"
+        android:dependency="now_bar" />
+
     <PreferenceCategory
         android:key="now_bar_looks_category"
         android:title="@string/now_bar_looks"

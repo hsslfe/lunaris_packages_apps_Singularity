@@ -123,4 +123,6 @@
     </string-array>
     <string name="now_bar_show_page">What shows in the bar</string>
     <string name="now_bar_show_page_summary">Music and video, timers, calls and more</string>
+    <string name="now_bar_notifications">Notifications</string>
+    <string name="now_bar_notifications_summary">Show notifications in the Now Bar on the lock screen</string>
 </resources>

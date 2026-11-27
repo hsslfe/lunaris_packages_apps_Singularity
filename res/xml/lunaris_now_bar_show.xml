@@ -25,6 +25,11 @@
         android:defaultValue="true"
         android:dependency="now_bar_calls" />
     <lineageos.preference.SystemSettingSwitchPreference
+        android:key="now_bar_notifications"
+        android:title="@string/now_bar_notifications"
+        android:summary="@string/now_bar_notifications_summary"
+        android:defaultValue="true" />
+    <lineageos.preference.SystemSettingSwitchPreference
         android:key="now_bar_live_updates"
         android:title="@string/now_bar_live"
         android:summary="@string/now_bar_live_summary"

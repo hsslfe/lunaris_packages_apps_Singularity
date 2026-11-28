@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -23,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -100,17 +102,31 @@ public class SystemBlurSettings extends SettingsPreferenceFragment {
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         final View previewContainer = inflater.inflate(R.layout.system_blur_preview, root, false);
+        // The Settings list may deliberately draw beyond its own padding for the
+        // collapsing app bar. Keep that drawing inside this screen's list viewport.
+        final FrameLayout prefsViewport = new FrameLayout(context);
+        prefsViewport.setClipChildren(true);
+        prefsViewport.setClipToPadding(true);
+        prefsViewport.addOnLayoutChangeListener((v, left, top, right, bottom,
+                oldLeft, oldTop, oldRight, oldBottom) -> {
+            if (right - left != oldRight - oldLeft || bottom - top != oldBottom - oldTop
+                    || v.getClipBounds() == null) {
+                v.setClipBounds(new Rect(0, 0, right - left, bottom - top));
+            }
+        });
+        prefsViewport.addView(prefsView, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         if (landscape) {
             final LinearLayout.LayoutParams previewParams = new LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.44f);
             previewParams.gravity = Gravity.CENTER_VERTICAL;
             root.addView(previewContainer, previewParams);
-            root.addView(prefsView, new LinearLayout.LayoutParams(
+            root.addView(prefsViewport, new LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.MATCH_PARENT, 0.56f));
         } else {
             root.addView(previewContainer, new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            root.addView(prefsView, new LinearLayout.LayoutParams(
+            root.addView(prefsViewport, new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
         }
 

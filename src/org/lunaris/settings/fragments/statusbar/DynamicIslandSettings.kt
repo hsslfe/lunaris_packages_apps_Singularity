@@ -15,6 +15,8 @@ import androidx.preference.PreferenceGroup
 import androidx.preference.SwitchPreferenceCompat
 import com.android.internal.util.lunaris.LunarisBarSettings
 import com.android.settings.R
+import org.lunaris.settings.preferences.colorpicker.ColorPickerPreference
+import org.lunaris.settings.preferences.colorpicker.LunarisBarColorPickerPreference
 
 class DynamicIslandSettings : LunarisBarPreferenceFragment() {
     private var page = "main"
@@ -73,6 +75,7 @@ class DynamicIslandSettings : LunarisBarPreferenceFragment() {
                 true
             }
             "appearance" -> {
+                bindOutlineColor()
                 val preference = requireNotNull(findPreference<SwitchPreferenceCompat>("screen_profile"))
                 val width = LunarisBarSettings.screenWidth(requireContext())
                 val height = LunarisBarSettings.screenHeight(requireContext())
@@ -85,6 +88,32 @@ class DynamicIslandSettings : LunarisBarPreferenceFragment() {
             "gestures" -> bindGestures()
             "feature_style" -> buildFeatureStyle()
         }
+    }
+
+    private fun bindOutlineColor() {
+        val preference = requireNotNull(
+            findPreference<LunarisBarColorPickerPreference>("outline_color"),
+        )
+        val value = editor.config.integer("outline_color", 0, Int.MIN_VALUE, Int.MAX_VALUE)
+        preference.onPreferenceChangeListener = null
+        preference.setAutoSummaryEnabled(false)
+        preference.setDefaultValue(0)
+        preference.setNewPreviewColor(value)
+        preference.summary = if (value == 0) getString(R.string.lunaris_bar_outline_color_default)
+            else ColorPickerPreference.convertToRGB(value)
+        preference.setOnPreferenceChangeListener { _, next ->
+            changed(editor.put("outline_color" to (next as Int)))
+        }
+    }
+
+    override fun onDestroyView() {
+        findPreference<LunarisBarColorPickerPreference>("outline_color")?.dismissDialog()
+        super.onDestroyView()
+    }
+
+    override fun onUserChanged() {
+        findPreference<LunarisBarColorPickerPreference>("outline_color")?.dismissDialog()
+        super.onUserChanged()
     }
 
     private fun colorGroup(): PreferenceGroup = requireNotNull(findPreference<PreferenceGroup>("colors")).also { it.removeAll() }

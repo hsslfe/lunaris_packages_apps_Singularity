@@ -184,6 +184,13 @@
             android:max="30"
             settings:interval="1" />
 
+        <org.lunaris.settings.preferences.colorpicker.LunarisBarColorPickerPreference
+            android:key="outline_color"
+            android:title="@string/lunaris_bar_outline_color"
+            android:persistent="false"
+            android:defaultValue="0"
+            opaqueDialog="true" />
+
         <org.lunaris.settings.preferences.LunarisBarSeekBarPreference
             android:key="shadow_elevation"
             android:title="@string/lunaris_bar_shadow_elevation"

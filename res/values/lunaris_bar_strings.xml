@@ -206,6 +206,8 @@
     <string name="lunaris_bar_outline_day">Outline in light mode</string>
     <string name="lunaris_bar_outline_night">Outline in dark mode</string>
     <string name="lunaris_bar_outline_width">Outline width</string>
+    <string name="lunaris_bar_outline_color">Outline color</string>
+    <string name="lunaris_bar_outline_color_default">Default (automatic)</string>
     <string name="lunaris_bar_palette">Card palette</string>
     <string name="lunaris_bar_pentagon">Pentagon</string>
     <string name="lunaris_bar_percentage">Percentage</string>

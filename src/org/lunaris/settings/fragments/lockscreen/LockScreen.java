@@ -18,8 +18,6 @@ package org.lunaris.settings.fragments.lockscreen;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.SystemProperties;
-import android.os.UserHandle;
-import android.provider.Settings;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
@@ -57,8 +55,9 @@ public class LockScreen extends SettingsPreferenceFragment
     private static final String LUNARIS_UDFPS_CUSTOM_CATEGORY = "lockscreen_custom_category";
     private static final String KEY_KEYGUARD_SCRIM = "keyguard_scrim_transparent";
     private static final String KEY_LOCK_SCREEN_NOTIFICATIONS = "lock_screen_notifications_settings";
-    private static final String KEY_NOW_BAR = "now_bar";
-    private static final String KEY_MUSIC_PILL = "ax_dynamic_bar_keyguard_music_pill";
+    private static final String KEY_NOW_BAR = LockscreenBarSettings.NOW_BAR;
+    private static final String KEY_MUSIC_PILL = LockscreenBarSettings.MUSIC_PILL;
+    private static final String KEY_DYNAMIC_BAR = LockscreenBarSettings.DYNAMIC_BAR;
 
     private static final String KEY_FP_SUCCESS = "fp_success_vibrate";
     private static final String KEY_FP_ERROR = "fp_error_vibrate";
@@ -75,6 +74,7 @@ public class LockScreen extends SettingsPreferenceFragment
     private SwitchPreferenceCompat mKeyguardScrim;
     private SwitchPreferenceCompat mMusicPill;
     private SystemSettingPrimarySwitchPreference mNowBar;
+    private SecureSettingPrimarySwitchPreference mDynamicBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,6 +124,10 @@ public class LockScreen extends SettingsPreferenceFragment
         if (mNowBar != null) {
             mNowBar.setOnPreferenceChangeListener(this);
         }
+        mDynamicBar = findPreference(KEY_DYNAMIC_BAR);
+        if (mDynamicBar != null) {
+            mDynamicBar.setOnPreferenceChangeListener(this);
+        }
         mMusicPill = findPreference(KEY_MUSIC_PILL);
         if (mMusicPill != null) {
             mMusicPill.setOnPreferenceChangeListener(this);
@@ -144,19 +148,18 @@ public class LockScreen extends SettingsPreferenceFragment
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (preference == mNowBar) {
             if (Boolean.TRUE.equals(newValue)) {
-                // Enabling Now Bar replaces the separate lockscreen music pill.
-                Settings.Secure.putIntForUser(getContentResolver(), KEY_MUSIC_PILL,
-                        0, UserHandle.USER_CURRENT);
+                LockscreenBarSettings.disableLegacyBars(getContentResolver());
+                if (mDynamicBar != null) {
+                    mDynamicBar.loadValue();
+                }
                 if (mMusicPill != null) {
                     mMusicPill.setChecked(false);
                 }
             }
             return true;
-        } else if (preference == mMusicPill) {
+        } else if (preference == mMusicPill || preference == mDynamicBar) {
             if (Boolean.TRUE.equals(newValue)) {
-                // Enabling the classic music pill disables Now Bar.
-                Settings.System.putIntForUser(getContentResolver(), KEY_NOW_BAR,
-                        0, UserHandle.USER_CURRENT);
+                LockscreenBarSettings.disableNowBar(getContentResolver());
                 if (mNowBar != null) {
                     mNowBar.loadValue();
                 }
@@ -196,21 +199,16 @@ public class LockScreen extends SettingsPreferenceFragment
     @Override
     public void onResume() {
         super.onResume();
+        LockscreenBarSettings.resolveConflict(getContentResolver());
         if (mNowBar != null) {
             mNowBar.loadValue();
         }
+        if (mDynamicBar != null) {
+            mDynamicBar.loadValue();
+        }
         if (mMusicPill != null) {
-            final boolean nowBarEnabled = Settings.System.getIntForUser(
-                    getContentResolver(), KEY_NOW_BAR, 0, UserHandle.USER_CURRENT) != 0;
-            boolean musicPillEnabled = Settings.Secure.getIntForUser(
-                    getContentResolver(), KEY_MUSIC_PILL, 0, UserHandle.USER_CURRENT) != 0;
-            if (nowBarEnabled && musicPillEnabled) {
-                // Resolve conflicting legacy states without enabling either feature.
-                Settings.Secure.putIntForUser(getContentResolver(), KEY_MUSIC_PILL,
-                        0, UserHandle.USER_CURRENT);
-                musicPillEnabled = false;
-            }
-            mMusicPill.setChecked(musicPillEnabled);
+            mMusicPill.setChecked(LockscreenBarSettings.isLegacyBarEnabled(
+                    getContentResolver(), KEY_MUSIC_PILL));
         }
         // Keep primary switches in sync after returning from detail pages.
         for (String key : new String[] {
@@ -221,8 +219,7 @@ public class LockScreen extends SettingsPreferenceFragment
             }
         }
         for (String key : new String[] {
-                "lockscreen_pulse_enabled", "lockscreen_smartspace_extras_enabled",
-                "ax_dynamic_bar_lockscreen_enabled" }) {
+                "lockscreen_pulse_enabled", "lockscreen_smartspace_extras_enabled" }) {
             SecureSettingPrimarySwitchPreference preference = findPreference(key);
             if (preference != null) {
                 preference.loadValue();

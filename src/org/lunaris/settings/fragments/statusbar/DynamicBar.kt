@@ -20,6 +20,7 @@ import com.android.internal.logging.nano.MetricsProto
 import com.android.settings.R
 import com.android.settings.SettingsPreferenceFragment
 import org.json.JSONArray
+import org.lunaris.settings.fragments.lockscreen.LockscreenBarSettings
 
 class DynamicBar : SettingsPreferenceFragment() {
 
@@ -76,7 +77,11 @@ class DynamicBar : SettingsPreferenceFragment() {
     private fun setupKeyguardSubPrefs() {
         val keyguardPref = findPreference<Preference>(SETTINGS_KEY_KEYGUARD_ENABLED)
         keyguardPref?.setOnPreferenceChangeListener { _, newValue ->
-            updateKeyguardSubPrefsVisibility(newValue as Boolean)
+            val enabled = newValue as Boolean
+            if (isLockscreen && enabled) {
+                LockscreenBarSettings.disableNowBar(resolver)
+            }
+            updateKeyguardSubPrefsVisibility(enabled)
             true
         }
         val keyguardEnabled = Settings.Secure.getIntForUser(

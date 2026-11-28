@@ -10,6 +10,7 @@ import org.lunaris.settings.preferences.NowBarChipsPreference;
 import org.lunaris.settings.preferences.SystemSettingSeekBarPreference;
 import android.provider.Settings;
 
+import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 
 import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
@@ -75,6 +76,15 @@ public class NowBarSettings extends SettingsPreferenceFragment {
 
     private void load() {
         addPreferencesFromResource(R.xml.lunaris_now_bar);
+        final Preference enabled = findPreference(LockscreenBarSettings.NOW_BAR);
+        if (enabled != null) {
+            enabled.setOnPreferenceChangeListener((preference, newValue) -> {
+                if (Boolean.TRUE.equals(newValue)) {
+                    LockscreenBarSettings.disableLegacyBars(getContentResolver());
+                }
+                return true;
+            });
+        }
         // Unlike the old three-choice width presets, allow every single dp.
         // Set this on the actual preference so it works regardless of XML
         // attribute namespace parsing on different Settings builds.

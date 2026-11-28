@@ -97,6 +97,23 @@
             android:defaultValue="false"
             android:fragment="org.lunaris.settings.fragments.lockscreen.NowBarSettings" />
 
+        <org.lunaris.settings.preferences.SecureSettingSwitchPreference
+            android:key="ax_dynamic_bar_keyguard_coloros_dim"
+            android:title="@string/lockscreen_coloros_reveal_dim_title"
+            android:summary="@string/lockscreen_coloros_reveal_dim_summary"
+            android:defaultValue="true" />
+
+        <org.lunaris.settings.preferences.SecureSettingSeekBarPreference
+            android:key="ax_dynamic_bar_keyguard_coloros_dim_amount"
+            android:title="@string/lockscreen_coloros_reveal_dim_amount"
+            android:defaultValue="75"
+            android:max="100"
+            android:dependency="ax_dynamic_bar_keyguard_coloros_dim"
+            settings:min="0"
+            settings:interval="1"
+            settings:units="%"
+            settings:continuousUpdates="true" />
+
         <!-- Pulse music visualizer -->
         <org.lunaris.settings.preferences.SecureSettingPrimarySwitchPreference
             android:key="lockscreen_pulse_enabled"

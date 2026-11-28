@@ -18,6 +18,8 @@ package org.lunaris.settings.fragments.lockscreen;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.SystemProperties;
+import android.os.UserHandle;
+import android.provider.Settings;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
@@ -32,6 +34,7 @@ import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settingslib.search.SearchIndexable;
 
 import org.lunaris.settings.preferences.SecureSettingPrimarySwitchPreference;
+import org.lunaris.settings.preferences.SecureSettingSeekBarPreference;
 import org.lunaris.settings.preferences.SystemSettingPrimarySwitchPreference;
 import org.lunaris.settings.utils.DeviceUtils;
 import org.lunaris.settings.utils.SystemUtils;
@@ -58,6 +61,8 @@ public class LockScreen extends SettingsPreferenceFragment
     private static final String KEY_NOW_BAR = LockscreenBarSettings.NOW_BAR;
     private static final String KEY_MUSIC_PILL = LockscreenBarSettings.MUSIC_PILL;
     private static final String KEY_DYNAMIC_BAR = LockscreenBarSettings.DYNAMIC_BAR;
+    private static final String KEY_COLOROS_DIM = "ax_dynamic_bar_keyguard_coloros_dim";
+    private static final String KEY_COLOROS_DIM_AMOUNT = "ax_dynamic_bar_keyguard_coloros_dim_amount";
 
     private static final String KEY_FP_SUCCESS = "fp_success_vibrate";
     private static final String KEY_FP_ERROR = "fp_error_vibrate";
@@ -75,6 +80,8 @@ public class LockScreen extends SettingsPreferenceFragment
     private SwitchPreferenceCompat mMusicPill;
     private SystemSettingPrimarySwitchPreference mNowBar;
     private SecureSettingPrimarySwitchPreference mDynamicBar;
+    private SwitchPreferenceCompat mColorOsDim;
+    private SecureSettingSeekBarPreference mColorOsDimAmount;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -133,6 +140,13 @@ public class LockScreen extends SettingsPreferenceFragment
             mMusicPill.setOnPreferenceChangeListener(this);
         }
 
+        mColorOsDim = findPreference(KEY_COLOROS_DIM);
+        mColorOsDimAmount = findPreference(KEY_COLOROS_DIM_AMOUNT);
+        if (mColorOsDim != null && mColorOsDimAmount != null) {
+            mColorOsDim.setOnPreferenceChangeListener(this);
+            mColorOsDimAmount.setVisible(mColorOsDim.isChecked());
+        }
+
         updateWeatherSettings();
     }
 
@@ -146,7 +160,12 @@ public class LockScreen extends SettingsPreferenceFragment
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (preference == mNowBar) {
+        if (preference == mColorOsDim) {
+            if (mColorOsDimAmount != null) {
+                mColorOsDimAmount.setVisible(Boolean.TRUE.equals(newValue));
+            }
+            return true;
+        } else if (preference == mNowBar) {
             if (Boolean.TRUE.equals(newValue)) {
                 LockscreenBarSettings.disableLegacyBars(getContentResolver());
                 if (mDynamicBar != null) {
@@ -209,6 +228,14 @@ public class LockScreen extends SettingsPreferenceFragment
         if (mMusicPill != null) {
             mMusicPill.setChecked(LockscreenBarSettings.isLegacyBarEnabled(
                     getContentResolver(), KEY_MUSIC_PILL));
+        }
+        if (mColorOsDim != null && mColorOsDimAmount != null) {
+            boolean enabled = Settings.Secure.getIntForUser(getContentResolver(),
+                    KEY_COLOROS_DIM, 1, UserHandle.USER_CURRENT) != 0;
+            mColorOsDim.setChecked(enabled);
+            mColorOsDimAmount.setVisible(enabled);
+            mColorOsDimAmount.setValue(Settings.Secure.getIntForUser(getContentResolver(),
+                    KEY_COLOROS_DIM_AMOUNT, 75, UserHandle.USER_CURRENT));
         }
         // Keep primary switches in sync after returning from detail pages.
         for (String key : new String[] {
